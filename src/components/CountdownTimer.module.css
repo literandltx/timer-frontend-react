@@ -1,0 +1,21 @@
+.container {
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    transition: transform 0.1s ease;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.container:active {
+    transform: translate(-50%, -50%) scale(0.99);
+}
+
+.timerText {
+    font-family: system-ui, sans-serif;
+    font-size: 3rem;
+    margin: 0;
+}
