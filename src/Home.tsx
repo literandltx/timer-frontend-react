@@ -1,6 +1,7 @@
 import './Home.css'
 import CountdownTimer, {type TimerData} from "./components/Timer.tsx";
 import {useState} from "react";
+import SettingModal from "./components/SettingModal.tsx";
 
 const initialSeconds: number = 5
 
@@ -24,6 +25,7 @@ function Home() {
                 onFinish={handleTimerFinish}
                 onReset={handleTimerReset}
             />
+            <SettingModal/>
         </div>
     );
 }
