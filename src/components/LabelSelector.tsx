@@ -14,7 +14,7 @@ function LabelSelector({value, onChange, options}: LabelSelectorProps) {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 aria-label="Label"
-                className="absolute bottom-[2%] right-[4%] rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
+                className="rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
             >
                 {options.map((opt) => (
                     <option key={opt} value={opt} className="text-black">
