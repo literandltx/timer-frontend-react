@@ -32,7 +32,7 @@ export default function HistoryList({history, onClearAll, onClearToday}: History
 
             <ul className="w-full max-w-md space-y-2">
                 {history.map((item, index) => (
-                    <li key={index} className="flex justify-between items-center border p-3 rounded bg-gray-600">
+                    <li key={index} className="flex justify-between items-center border transition-colors duration-200 border-neutral-700 p-3 rounded bg-neutral-800 hover:bg-sky-900/30">
                         <div className="flex flex-col pl-2">
                             <span className="font-bold text-lg">{item.label}</span>
                             <span className="text-sm text-gray-300">{(item.timeAmount / 60).toFixed(1)} min</span>

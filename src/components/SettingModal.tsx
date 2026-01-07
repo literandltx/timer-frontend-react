@@ -10,23 +10,23 @@ interface SettingModalProps {
 function SettingModal({onTimeChange}: SettingModalProps) {
     const [isOpen, setIsOpen] = useState(false)
 
-    const [selectedValue, setSelectedValue] = useState(() => {
+    const [selectedValue, setSelectedValue] = useState((): number => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('user_timer_preference')
+            const saved: string | null = localStorage.getItem('user_timer_preference')
             return saved ? parseInt(saved, 10) : 40
         }
         return 40
     })
 
-    function open() {
+    function open(): void {
         setIsOpen(true)
     }
 
-    function close() {
+    function close(): void {
         setIsOpen(false)
     }
 
-    function handleSelect(value: number) {
+    function handleSelect(value: number): void {
         setSelectedValue(value)
         localStorage.setItem('user_timer_preference', value.toString())
 

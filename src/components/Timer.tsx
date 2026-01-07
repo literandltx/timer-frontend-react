@@ -25,11 +25,12 @@ function CountdownTimer({timeAmount, label, timestamp, onFinish, onReset}: Count
             return;
         }
 
-        const intervalId = setInterval(() => {
+        const intervalId: number = setInterval((): void => {
             if (timeLeft > 1) {
-                setTimeLeft((prev) => prev - 1);
+                setTimeLeft((prev): number => prev - 1);
             } else {
                 onFinish({label, timeAmount, timestamp});
+
                 clearInterval(intervalId);
                 setIsRunning(false);
                 setTimeLeft(timeAmount);
@@ -39,7 +40,7 @@ function CountdownTimer({timeAmount, label, timestamp, onFinish, onReset}: Count
         return () => clearInterval(intervalId);
     }, [isRunning, timeLeft, label, timeAmount, timestamp, onFinish]);
 
-    const formatTime = (seconds: number) => {
+    const formatTime = (seconds: number): string => {
         const minutes: number = Math.floor(seconds / 60);
         const remainingSeconds: number = seconds % 60;
 
@@ -53,10 +54,10 @@ function CountdownTimer({timeAmount, label, timestamp, onFinish, onReset}: Count
     };
 
     const handleDoubleClick = () => {
+        onReset({label, timeAmount: timeAmount - timeLeft, timestamp});
+
         setIsRunning(false);
         setTimeLeft(timeAmount);
-
-        onReset({label, timeAmount, timestamp});
     };
 
     return (

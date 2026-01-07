@@ -12,11 +12,11 @@ const LOCAL_STORAGE_KEY_PREF = 'user_timer_preference';
 const LOCAL_STORAGE_KEY_HISTORY = 'timerHistory';
 
 function Home() {
-    const [timestamp] = useState<number>(() => Date.now());
+    const [timestamp] = useState<number>((): number => Date.now());
 
-    const [timeAmount, setTimeAmount] = useState<number>(() => {
+    const [timeAmount, setTimeAmount] = useState<number>((): number => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem(LOCAL_STORAGE_KEY_PREF);
+            const saved: string | null = localStorage.getItem(LOCAL_STORAGE_KEY_PREF);
             return saved ? parseInt(saved, 10) * SECONDS_PER_MINUTE : DEFAULT_DURATION_MINUTES * SECONDS_PER_MINUTE;
         }
         return DEFAULT_DURATION_MINUTES * SECONDS_PER_MINUTE;
@@ -33,11 +33,11 @@ function Home() {
         return [];
     });
 
-    const handleTimeChange = (minutes: number) => {
+    const handleTimeChange = (minutes: number): void => {
         setTimeAmount(minutes * SECONDS_PER_MINUTE);
     };
 
-    const handleStatusChange = (selectedValue: string) => {
+    const handleStatusChange = (selectedValue: string): void => {
         if (selectedValue === 'ADD_NEW') {
             const newLabel: string | null = window.prompt("Enter a new label name:", "Label");
 
@@ -50,15 +50,15 @@ function Home() {
         }
     };
 
-    const handleTimerFinish = (data: TimerData) => {
+    const handleTimerFinish = (data: TimerData): void => {
         setFinishedTimers((prev) => [...prev, data]);
     };
 
-    const handleTimerReset = (data: TimerData) => {
+    const handleTimerReset = (data: TimerData): void => {
         setFinishedTimers((prev) => [...prev, data]);
     };
 
-    useEffect(() => {
+    useEffect((): void => {
         localStorage.setItem(LOCAL_STORAGE_KEY_HISTORY, JSON.stringify(finishedTimers));
     }, [finishedTimers]);
 

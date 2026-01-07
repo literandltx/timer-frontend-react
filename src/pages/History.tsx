@@ -7,7 +7,7 @@ function History() {
     const [finishedTimers, setFinishedTimers] = useState<TimerData[]>(() => {
         if (typeof window !== 'undefined') {
             try {
-                const saved = localStorage.getItem('timerHistory');
+                const saved: string | null = localStorage.getItem('timerHistory');
                 return saved ? JSON.parse(saved) : [];
             } catch (error) {
                 console.error("Failed to parse history:", error);
@@ -17,7 +17,7 @@ function History() {
         return [];
     });
 
-    useEffect(() => {
+    useEffect((): void => {
         if (typeof window !== 'undefined') {
             localStorage.setItem('timerHistory', JSON.stringify(finishedTimers));
         }
