@@ -1,10 +1,10 @@
 import './Home.css'
-import CountdownTimer, {type TimerData} from "../components/Timer.tsx";
 import {useEffect, useState} from "react";
+import CountdownTimer, {type TimerData} from "../components/Timer.tsx";
 import SettingModal from "../components/SettingModal.tsx";
 import LabelSelector from "../components/LabelSelector.tsx";
 import Counter from "../components/Counter.tsx";
-import HistoryList from "../components/History.tsx";
+import {NavLink} from "react-router";
 
 const initialSeconds: number = 5
 
@@ -43,12 +43,6 @@ function Home() {
         setFinishedTimers((prev) => [...prev, data]);
     };
 
-    const clearHistory = () => {
-        if (confirm("Are you sure you want to delete all history?")) {
-            setFinishedTimers([]); // This triggers useEffect to save "[]" to localStorage
-        }
-    };
-
     useEffect(() => {
         localStorage.setItem('timerHistory', JSON.stringify(finishedTimers));
     }, [finishedTimers]);
@@ -70,11 +64,10 @@ function Home() {
                 />
                 <Counter count={finishedTimers.length}/>
             </div>
-            <HistoryList
-                history={finishedTimers}
-                onClear={clearHistory}
-            />
-            <SettingModal/>
+            <div className="absolute bottom-[2%] left-[2%] flex items-center gap-2">
+                <SettingModal/>
+                <NavLink to={"/history"}>History</NavLink>
+            </div>
         </div>
     );
 }

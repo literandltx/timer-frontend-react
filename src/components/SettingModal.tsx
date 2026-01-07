@@ -16,7 +16,7 @@ function SettingModal() {
         <>
             <Button
                 onClick={open}
-                className="absolute bottom-[2%] left-[2%] rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
+                className="rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
             >
                 Settings
             </Button>
