@@ -32,15 +32,9 @@ function SettingModal() {
                                 Settings
                             </DialogTitle>
 
-                            <p className="mt-2 text-sm/6 text-white/50">
-                                Your payment has been successfully submitted. We’ve sent you an email with all of the
-                                details of your
-                                order.
-                            </p>
-
                             <div className="mt-4">
                                 <Button
-                                    className="inline-flex items-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
+                                    className="fixed bottom-2 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/4 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
                                     onClick={close}
                                 >
                                     Close!
