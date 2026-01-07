@@ -6,21 +6,36 @@ import LabelSelector from "../components/LabelSelector.tsx";
 import Counter from "../components/Counter.tsx";
 import {NavLink} from "react-router";
 
-const initialSeconds: number = 5
+const SECONDS_PER_MINUTE = 60;
+const DEFAULT_DURATION_MINUTES = 40;
+const LOCAL_STORAGE_KEY_PREF = 'user_timer_preference';
+const LOCAL_STORAGE_KEY_HISTORY = 'timerHistory';
 
 function Home() {
     const [timestamp] = useState<number>(() => Date.now());
+
+    const [timeAmount, setTimeAmount] = useState<number>(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY_PREF);
+            return saved ? parseInt(saved, 10) * SECONDS_PER_MINUTE : DEFAULT_DURATION_MINUTES * SECONDS_PER_MINUTE;
+        }
+        return DEFAULT_DURATION_MINUTES * SECONDS_PER_MINUTE;
+    });
 
     const [options, setOptions] = useState<string[]>(['Active', 'Paused', 'Delayed', 'Canceled'])
     const [label, setLabel] = useState(options[0]);
 
     const [finishedTimers, setFinishedTimers] = useState<TimerData[]>(() => {
         if (typeof window !== 'undefined') {
-            const saved: string | null = localStorage.getItem('timerHistory');
+            const saved: string | null = localStorage.getItem(LOCAL_STORAGE_KEY_HISTORY);
             return saved ? JSON.parse(saved) : [];
         }
         return [];
     });
+
+    const handleTimeChange = (minutes: number) => {
+        setTimeAmount(minutes * SECONDS_PER_MINUTE);
+    };
 
     const handleStatusChange = (selectedValue: string) => {
         if (selectedValue === 'ADD_NEW') {
@@ -44,13 +59,14 @@ function Home() {
     };
 
     useEffect(() => {
-        localStorage.setItem('timerHistory', JSON.stringify(finishedTimers));
+        localStorage.setItem(LOCAL_STORAGE_KEY_HISTORY, JSON.stringify(finishedTimers));
     }, [finishedTimers]);
 
     return (
         <div>
             <CountdownTimer
-                timeAmount={initialSeconds}
+                key={timeAmount}
+                timeAmount={timeAmount}
                 label={label}
                 timestamp={timestamp}
                 onFinish={handleTimerFinish}
@@ -65,7 +81,7 @@ function Home() {
                 <Counter count={finishedTimers.length}/>
             </div>
             <div className="absolute bottom-[2%] left-[2%] flex items-center gap-2">
-                <SettingModal/>
+                <SettingModal onTimeChange={handleTimeChange}/>
                 <NavLink to={"/history"}>History</NavLink>
             </div>
         </div>

@@ -1,8 +1,22 @@
 import {Button, Dialog, DialogPanel, DialogTitle} from '@headlessui/react'
 import {useState} from 'react'
 
-function SettingModal() {
+const OPTIONS: number[] = [15, 40, 60]
+
+interface SettingModalProps {
+    onTimeChange: (minutes: number) => void;
+}
+
+function SettingModal({onTimeChange}: SettingModalProps) {
     const [isOpen, setIsOpen] = useState(false)
+
+    const [selectedValue, setSelectedValue] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('user_timer_preference')
+            return saved ? parseInt(saved, 10) : 40
+        }
+        return 40
+    })
 
     function open() {
         setIsOpen(true)
@@ -10,6 +24,13 @@ function SettingModal() {
 
     function close() {
         setIsOpen(false)
+    }
+
+    function handleSelect(value: number) {
+        setSelectedValue(value)
+        localStorage.setItem('user_timer_preference', value.toString())
+
+        onTimeChange(value)
     }
 
     return (
@@ -32,12 +53,33 @@ function SettingModal() {
                                 Settings
                             </DialogTitle>
 
-                            <div className="mt-4">
+                            <div className="mt-6">
+                                <p className="text-sm/6 text-white/50 mb-3">Select Duration (Minutes)</p>
+                                <div className="flex gap-4">
+                                    {OPTIONS.map((option) => (
+                                        <Button
+                                            key={option}
+                                            onClick={() => handleSelect(option)}
+                                            className={`
+                                                flex-1 rounded-lg px-4 py-2 text-sm font-semibold shadow-inner shadow-white/10 focus:outline-none
+                                                ${selectedValue === option
+                                                ? 'bg-white text-black'
+                                                : 'bg-white/10 text-white hover:bg-white/20'
+                                            }
+                                            `}
+                                        >
+                                            {option}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="mt-8">
                                 <Button
-                                    className="fixed bottom-2 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/4 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
+                                    className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-gray-700 px-3 py-1.5 text-sm/4 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
                                     onClick={close}
                                 >
-                                    Close!
+                                    Close
                                 </Button>
                             </div>
                         </DialogPanel>

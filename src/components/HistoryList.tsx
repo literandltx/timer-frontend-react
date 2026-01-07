@@ -1,46 +1,49 @@
 import type {TimerData} from "./Timer.tsx";
 
-interface HistoryListProps {
+type HistoryListProps = {
     history: TimerData[];
-    onClear: () => void;
-}
+    onClearAll: () => void;
+    onClearToday: () => void;
+};
 
-export default function HistoryList({history, onClear}: HistoryListProps) {
+export default function HistoryList({history, onClearAll, onClearToday}: HistoryListProps) {
     if (history.length === 0) {
-        return <p className="text-gray-500 text-sm mt-4">No history yet.</p>;
+        return <div className="p-4 text-center">No history available.</div>;
     }
 
     return (
-        <div>
-            <div>
-                <h2>Session History</h2>
+        <div className="flex flex-col items-center gap-4 p-4">
+            <h2 className="text-xl font-bold">Timer History</h2>
+
+            <div className="flex gap-4">
                 <button
-                    onClick={onClear}
+                    onClick={onClearToday}
+                    className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                >
+                    Clear Today
+                </button>
+                <button
+                    onClick={onClearAll}
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
                     Clear All
                 </button>
             </div>
 
-            <div>
-                {history.slice().reverse().map((item, index) => (
-                    <div key={index}>
-                        <div>
-                            <p>{item.label}</p>
-                            <p>{new Date(item.timestamp).toLocaleString()}</p>
+            <ul className="w-full max-w-md space-y-2">
+                {history.map((item, index) => (
+                    <li key={index} className="flex justify-between items-center border p-3 rounded bg-gray-600">
+                        <div className="flex flex-col pl-2">
+                            <span className="font-bold text-lg">{item.label}</span>
+                            <span className="text-sm text-gray-300">{(item.timeAmount / 60).toFixed(1)} min</span>
                         </div>
 
-                        <div className="text-right">
-                            {formatTime(item.timeAmount)}
-                        </div>
-                    </div>
+                        <span className="text-sm text-gray-400 text-right">
+                            {new Date(item.timestamp).toLocaleString()}
+                        </span>
+                    </li>
                 ))}
-            </div>
+            </ul>
         </div>
-    )
-}
-
-function formatTime(seconds: number) {
-    const m: number = Math.floor(seconds / 60);
-    const s: number = seconds % 60;
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
+    );
 }
