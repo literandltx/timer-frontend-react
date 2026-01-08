@@ -142,6 +142,15 @@ function History() {
         setFinishedTimers(prev => prev.filter((_, index) => index !== indexToDelete));
     };
 
+    const editHistoryEntry = (index: number, newTimeInSeconds: number) => {
+        setFinishedTimers(prev => {
+            const copy = [...prev];
+            // Update only the timeAmount for the specific item
+            copy[index] = { ...copy[index], timeAmount: newTimeInSeconds };
+            return copy;
+        });
+    };
+
     return (
         <div>
             <NavLink to={"/"} className={"absolute top-[2%] left-[2%]"}>Home</NavLink>
@@ -170,6 +179,7 @@ function History() {
                 onClearAll={clearAllHistory}
                 onClearToday={clearTodaysHistory}
                 onDeleteEntry={deleteOneHistoryEntry}
+                onEditEntry={editHistoryEntry}
             />
         </div>
     )
