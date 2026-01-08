@@ -46,9 +46,20 @@ function Home() {
                 setOptions((prev) => [...prev, newLabel]);
                 setLabel(newLabel);
             }
-        } else {
-            setLabel(selectedValue);
+            return;
         }
+
+        if (selectedValue === 'DELETE_CURRENT') {
+            const confirmDelete: boolean = window.confirm(`Are you sure you want to delete "${label}"?`);
+
+            if (confirmDelete) {
+                setOptions((prev) => prev.filter((opt) => opt !== label));
+                setLabel("");
+            }
+            return;
+        }
+
+        setLabel(selectedValue);
     };
 
     const handleTimerFinish = (data: TimerData): void => {

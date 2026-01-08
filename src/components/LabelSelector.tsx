@@ -1,4 +1,4 @@
-import {Select} from '@headlessui/react'
+import { Select } from '@headlessui/react'
 
 interface LabelSelectorProps {
     value: string;
@@ -25,8 +25,14 @@ function LabelSelector({value, onChange, options}: LabelSelectorProps) {
                 <option disabled>──────────</option>
 
                 <option value="ADD_NEW" className="text-blue-600 font-bold">
-                    + Create New Label
+                    Create new label
                 </option>
+
+                {value && (
+                    <option value="DELETE_CURRENT" className="font-bold">
+                        Delete: {value}
+                    </option>
+                )}
             </Select>
         </div>
     )
