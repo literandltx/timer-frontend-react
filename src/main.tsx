@@ -5,7 +5,7 @@ import {BrowserRouter, Route, Routes} from "react-router";
 import History from "./pages/History.tsx";
 
 createRoot(document.getElementById('root')!).render(
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
             <Route path="/" element={<Home/>}/>
             <Route path="/history" element={<History/>}/>
