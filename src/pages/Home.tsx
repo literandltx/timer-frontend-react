@@ -1,5 +1,5 @@
 import './Home.css'
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import {NavLink} from "react-router";
 
 import CountdownTimer, {type TimerData} from "../components/Timer.tsx";
@@ -15,6 +15,7 @@ const LOCAL_STORAGE_KEY_OPTIONS = 'timer_label_options';
 
 function Home() {
     const [timestamp] = useState<number>((): number => Date.now());
+    const blinkIntervalRef = useRef<number | null>(null);
 
     const [timeAmount, setTimeAmount] = useState<number>((): number => {
         if (typeof window !== 'undefined') {
@@ -41,6 +42,27 @@ function Home() {
         }
         return [];
     });
+
+    const stopBlinking = (): void => {
+        if (blinkIntervalRef.current) {
+            clearInterval(blinkIntervalRef.current);
+            blinkIntervalRef.current = null;
+        }
+        document.title = "timer";
+    };
+
+    const startBlinking = (): void => {
+        stopBlinking();
+        let isAlert: boolean = true;
+        blinkIntervalRef.current = window.setInterval(() => {
+            document.title = isAlert ? "⚠️ TIMER! ⚠️" : "timer";
+            isAlert = !isAlert;
+        }, 1000);
+    };
+
+    useEffect(() => {
+        return () => stopBlinking();
+    }, []);
 
     const handleTimeChange = (minutes: number): void => {
         setTimeAmount(minutes * SECONDS_PER_MINUTE);
@@ -72,11 +94,28 @@ function Home() {
 
     const handleTimerFinish = (data: TimerData): void => {
         setFinishedTimers((prev) => [...prev, data]);
+        startBlinking();
+
+        console.log("Notification!");
     };
 
     const handleTimerReset = (data: TimerData): void => {
         setFinishedTimers((prev) => [...prev, data]);
+        stopBlinking();
     };
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible") {
+                stopBlinking();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, []);
 
     useEffect((): void => {
         localStorage.setItem(LOCAL_STORAGE_KEY_HISTORY, JSON.stringify(finishedTimers));
