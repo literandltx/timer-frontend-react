@@ -1,7 +1,9 @@
-import HistoryList from "../components/HistoryList.tsx";
 import {useState, useEffect} from "react";
-import type {TimerData} from "../components/Timer.tsx";
 import {NavLink} from "react-router";
+
+import type {TimerData} from "../components/Timer.tsx";
+import HistoryList from "../components/HistoryList.tsx";
+
 
 function History() {
     const [finishedTimers, setFinishedTimers] = useState<TimerData[]>(() => {
@@ -22,6 +24,40 @@ function History() {
             localStorage.setItem('timerHistory', JSON.stringify(finishedTimers));
         }
     }, [finishedTimers]);
+
+    const exportToCSV = (): void => {
+        if (finishedTimers.length === 0) {
+            alert("No history to export.");
+            return;
+        }
+
+        const headers: string[] = ["Label", "Time Amount (s)", "Timestamp (Raw)", "Date Formatted"];
+        const rows: string[] = finishedTimers.map(timer => {
+            const safeLabel = `"${timer.label.replace(/"/g, '""')}"`;
+            const dateStr = `"${new Date(timer.timestamp).toLocaleString()}"`;
+
+            return [
+                safeLabel,
+                timer.timeAmount,
+                timer.timestamp,
+                dateStr
+            ].join(",");
+        });
+
+        const csvContent = [headers.join(","), ...rows].join("\n");
+
+        const blob: Blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+        const url: string = URL.createObjectURL(blob);
+        const link: HTMLAnchorElement = document.createElement("a");
+        const fileName = `timer_history_${new Date().toISOString().slice(0, 10)}.csv`;
+
+        link.href = url;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+    };
 
     const clearAllHistory = () => {
         if (confirm("Are you sure you want to delete ALL history?")) {
@@ -45,6 +81,12 @@ function History() {
     return (
         <div>
             <NavLink to={"/"} className={"absolute top-[2%] left-[2%]"}>Home</NavLink>
+            <button
+                onClick={exportToCSV}
+                className={"absolute top-[2%] right-[2%] px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm transition-colors"}
+            >
+                Export CSV
+            </button>
             <HistoryList
                 history={finishedTimers}
                 onClearAll={clearAllHistory}
