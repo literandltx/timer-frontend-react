@@ -1,7 +1,7 @@
 import {Button, Dialog, DialogPanel, DialogTitle} from '@headlessui/react'
 import {useState} from 'react'
 
-const OPTIONS: number[] = [15, 40, 60]
+const OPTIONS: number[] = [20, 40, 60, 90]
 
 interface SettingModalProps {
     onTimeChange: (minutes: number) => void;
