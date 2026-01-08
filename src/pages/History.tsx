@@ -5,7 +5,6 @@ import type {TimerData} from "../components/Timer.tsx";
 import HistoryList from "../components/HistoryList.tsx";
 
 function History() {
-    // Ref for the hidden file input
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [finishedTimers, setFinishedTimers] = useState<TimerData[]>(() => {
@@ -139,6 +138,10 @@ function History() {
         }
     };
 
+    const deleteOneHistoryEntry = (indexToDelete: number) => {
+        setFinishedTimers(prev => prev.filter((_, index) => index !== indexToDelete));
+    };
+
     return (
         <div>
             <NavLink to={"/"} className={"absolute top-[2%] left-[2%]"}>Home</NavLink>
@@ -166,6 +169,7 @@ function History() {
                 history={finishedTimers}
                 onClearAll={clearAllHistory}
                 onClearToday={clearTodaysHistory}
+                onDeleteEntry={deleteOneHistoryEntry}
             />
         </div>
     )
