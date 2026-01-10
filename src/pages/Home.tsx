@@ -2,7 +2,7 @@ import './Home.css'
 import {useEffect, useState, useRef} from "react";
 import {NavLink} from "react-router";
 
-import CountdownTimer, {type TimerData} from "../components/Timer.tsx";
+import Timer, {type TimerData} from "../components/Timer.tsx";
 import SettingModal from "../components/SettingModal.tsx";
 import LabelSelector from "../components/LabelSelector.tsx";
 import Counter from "../components/Counter.tsx";
@@ -127,7 +127,7 @@ function Home() {
 
     return (
         <div>
-            <CountdownTimer
+            <Timer
                 key={timeAmount}
                 timeAmount={timeAmount}
                 label={label}

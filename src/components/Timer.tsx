@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import styles from './CountdownTimer.module.css';
+import styles from './Timer.module.css';
 
 export type TimerData = {
     label: string;
@@ -16,7 +16,7 @@ type CountdownTimerProps = {
     onReset: (data: TimerData) => void;
 };
 
-function CountdownTimer({timeAmount, label, timestamp, onFinish, onReset}: CountdownTimerProps) {
+function Timer({timeAmount, label, timestamp, onFinish, onReset}: CountdownTimerProps) {
     const [timeLeft, setTimeLeft] = useState<number>(timeAmount);
     const [isRunning, setIsRunning] = useState<boolean>(false);
 
@@ -71,4 +71,4 @@ function CountdownTimer({timeAmount, label, timestamp, onFinish, onReset}: Count
     );
 }
 
-export default CountdownTimer;
+export default Timer;
