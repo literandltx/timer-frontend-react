@@ -1,5 +1,5 @@
 import {useState} from "react";
-import type {TimerData} from "./Timer.tsx";
+import type {TimerData} from "../home/Timer.tsx";
 
 type HistoryListProps = {
     history: TimerData[];
@@ -45,8 +45,8 @@ export default function HistoryList({history, onClearAll, onClearToday, onDelete
                 <button onClick={onClearToday}>Clear Today</button>
                 <button onClick={onClearAll}>Clear All</button>
             </div>
-
-            <ul className="w-full max-w-md space-y-2">
+            {/*<ul className="w-full max-w-[600px] space-y-2">*/}
+            <ul className="w-full max-w-2xl space-y-2">
                 {history.map((item, index) => {
                     const isEditing = editingIndex === index;
 
