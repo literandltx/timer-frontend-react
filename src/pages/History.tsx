@@ -1,8 +1,9 @@
 import {useState, useEffect, useRef} from "react";
 import {NavLink} from "react-router";
 
-import type {TimerData} from "../components/Timer.tsx";
-import HistoryList from "../components/HistoryList.tsx";
+import type {TimerData} from "../components/home/Timer.tsx";
+import HistoryList from "../components/history/HistoryList.tsx";
+import HistoryChart from "../components/history/HistoryChart.tsx";
 
 function History() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -145,8 +146,7 @@ function History() {
     const editHistoryEntry = (index: number, newTimeInSeconds: number) => {
         setFinishedTimers(prev => {
             const copy = [...prev];
-            // Update only the timeAmount for the specific item
-            copy[index] = { ...copy[index], timeAmount: newTimeInSeconds };
+            copy[index] = {...copy[index], timeAmount: newTimeInSeconds};
             return copy;
         });
     };
@@ -174,13 +174,18 @@ function History() {
                 </div>
             </div>
 
-            <HistoryList
-                history={finishedTimers}
-                onClearAll={clearAllHistory}
-                onClearToday={clearTodaysHistory}
-                onDeleteEntry={deleteOneHistoryEntry}
-                onEditEntry={editHistoryEntry}
-            />
+            <h1 className="text-2xl font-bold text-center mt-8 mb-0">History Chart</h1>
+            <div className="flex flex-col gap-2">
+                <HistoryChart data={finishedTimers}/>
+                <HistoryList
+                    history={finishedTimers}
+                    onClearAll={clearAllHistory}
+                    onClearToday={clearTodaysHistory}
+                    onDeleteEntry={deleteOneHistoryEntry}
+                    onEditEntry={editHistoryEntry}
+                />
+            </div>
+
         </div>
     )
 }

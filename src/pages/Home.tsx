@@ -2,10 +2,10 @@ import './Home.css'
 import {useEffect, useState, useRef} from "react";
 import {NavLink} from "react-router";
 
-import Timer, {type TimerData} from "../components/Timer.tsx";
-import SettingModal from "../components/SettingModal.tsx";
-import LabelSelector from "../components/LabelSelector.tsx";
-import Counter from "../components/Counter.tsx";
+import Timer, {type TimerData} from "../components/home/Timer.tsx";
+import SettingModal from "../components/home/SettingModal.tsx";
+import LabelSelector from "../components/home/LabelSelector.tsx";
+import Counter from "../components/home/Counter.tsx";
 
 const SECONDS_PER_MINUTE = 60;
 const DEFAULT_DURATION_MINUTES = 40;
