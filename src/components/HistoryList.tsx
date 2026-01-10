@@ -6,7 +6,7 @@ type HistoryListProps = {
     onClearAll: () => void;
     onClearToday: () => void;
     onDeleteEntry: (index: number) => void;
-    onEditEntry: (index: number, newTime: number) => void; // Add this type
+    onEditEntry: (index: number, newTime: number) => void;
 };
 
 export default function HistoryList({history, onClearAll, onClearToday, onDeleteEntry, onEditEntry}: HistoryListProps) {
