@@ -3,15 +3,24 @@ import type {TimerData} from "../home/Timer.tsx";
 
 type HistoryListProps = {
     history: TimerData[];
+    availableLabels: string[];
     onClearAll: () => void;
     onClearToday: () => void;
     onDeleteEntry: (index: number) => void;
-    onEditEntry: (index: number, newTime: number) => void;
+    onEditEntry: (index: number, newTime: number, newLabel: string) => void;
 };
 
-export default function HistoryList({history, onClearAll, onClearToday, onDeleteEntry, onEditEntry}: HistoryListProps) {
+export default function HistoryList({
+                                        history,
+                                        availableLabels,
+                                        onClearAll,
+                                        onClearToday,
+                                        onDeleteEntry,
+                                        onEditEntry
+                                    }: HistoryListProps) {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editValue, setEditValue] = useState<string>("");
+    const [editLabel, setEditLabel] = useState<string>("");
 
     if (history.length === 0) {
         return <div className="p-4 text-center">No history available.</div>;
@@ -21,24 +30,27 @@ export default function HistoryList({history, onClearAll, onClearToday, onDelete
         .map((item, index) => ({...item, originalIndex: index}))
         .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-    const handleStartEdit = (index: number, currentSeconds: number) => {
+    const handleStartEdit = (index: number, currentSeconds: number, currentLabel: string) => {
         setEditingIndex(index);
         const minutes: number = Math.round((currentSeconds / 60) * 100) / 100;
         setEditValue(minutes.toString());
+        setEditLabel(currentLabel);
     };
 
     const handleSaveEdit = (index: number) => {
         const minutes = parseFloat(editValue);
         if (!isNaN(minutes) && minutes >= 0) {
-            onEditEntry(index, Math.round(minutes * 60));
+            onEditEntry(index, Math.round(minutes * 60), editLabel);
         }
         setEditingIndex(null);
         setEditValue("");
+        setEditLabel("");
     };
 
     const handleCancelEdit = () => {
         setEditingIndex(null);
         setEditValue("");
+        setEditLabel("");
     };
 
     return (
@@ -60,7 +72,24 @@ export default function HistoryList({history, onClearAll, onClearToday, onDelete
                             className="flex justify-between items-center border transition-colors duration-200 border-neutral-700 p-3 rounded bg-neutral-800 hover:bg-sky-900/30 group">
 
                             <div className="flex flex-col pl-2">
-                                <span className="font-bold text-lg">{data.label}</span>
+                                {isEditing ? (
+                                    <div className="flex flex-col gap-1 mb-1">
+                                        <select
+                                            value={editLabel}
+                                            onChange={(e) => setEditLabel(e.target.value)}
+                                            className="bg-neutral-700 text-white text-sm rounded px-1 py-0.5 border border-neutral-600 focus:outline-none focus:border-sky-500"
+                                        >
+                                            {!availableLabels.includes(editLabel) && editLabel && (
+                                                <option value={editLabel}>{editLabel}</option>
+                                            )}
+                                            {availableLabels.map(opt => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                ) : (
+                                    <span className="font-bold text-lg">{data.label}</span>
+                                )}
 
                                 {isEditing ? (
                                     <div className="flex items-center gap-2 mt-1">
@@ -112,9 +141,9 @@ export default function HistoryList({history, onClearAll, onClearToday, onDelete
                                     ) : (
                                         <>
                                             <button
-                                                onClick={() => handleStartEdit(originalIndex, data.timeAmount)}
+                                                onClick={() => handleStartEdit(originalIndex, data.timeAmount, data.label)}
                                                 className="text-neutral-500 hover:text-sky-400 transition-colors p-1 rounded hover:bg-white/10"
-                                                title="Edit time"
+                                                title="Edit entry"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                      strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
