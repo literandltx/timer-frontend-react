@@ -41,6 +41,11 @@ export default function HistoryChart({data}: HistoryChartProps) {
         });
     }, [data, weekOffset]);
 
+    const averageMinutes = useMemo(() => {
+        const total = chartData.reduce((acc, curr) => acc + curr.minutes, 0);
+        return Math.round(total / 7);
+    }, [chartData]);
+
     const maxMinutes: number = Math.max(...chartData.map(d => d.minutes));
     let stepSize: number = 60;
     if (maxMinutes <= 60) {
@@ -60,9 +65,14 @@ export default function HistoryChart({data}: HistoryChartProps) {
     return (
         <div className="w-full max-w-2xl mx-auto p-10 bg-white/5 rounded-lg border border-gray-200/20 shadow-sm mt-8">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-200">
-                    {weekOffset === 0 ? "Last 7 Days" : `${weekOffset} Week${weekOffset > 1 ? 's' : ''} Ago`}
-                </h2>
+                <div>
+                    <h2 className="text-lg font-semibold text-gray-200">
+                        {weekOffset === 0 ? "Last 7 Days" : `${weekOffset} Week${weekOffset > 1 ? 's' : ''} Ago`}
+                    </h2>
+                    <p className="text-sm text-gray-400 mt-1">
+                        Daily Average: <span className="text-gray-200 font-medium">{averageMinutes} min</span>
+                    </p>
+                </div>
 
                 <div className="flex items-center gap-2">
                     <button
