@@ -7,6 +7,13 @@ import HistoryChart from "../components/history/HistoryChart.tsx";
 
 function History() {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [availableLabels] = useState<string[]>(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('timer_label_options');
+            return saved ? JSON.parse(saved) : ['Focus', 'Learn', 'Recharge'];
+        }
+        return ['Focus', 'Learn', 'Recharge'];
+    });
 
     const [finishedTimers, setFinishedTimers] = useState<TimerData[]>(() => {
         if (typeof window !== 'undefined') {
@@ -143,10 +150,15 @@ function History() {
         setFinishedTimers(prev => prev.filter((_, index) => index !== indexToDelete));
     };
 
-    const editHistoryEntry = (index: number, newTimeInSeconds: number) => {
+    const editHistoryEntry = (index: number, newTimeInSeconds: number, newLabel: string, newTimestamp: number) => {
         setFinishedTimers(prev => {
             const copy = [...prev];
-            copy[index] = {...copy[index], timeAmount: newTimeInSeconds};
+            copy[index] = {
+                ...copy[index],
+                timeAmount: newTimeInSeconds,
+                label: newLabel,
+                timestamp: newTimestamp
+            };
             return copy;
         });
     };
@@ -179,6 +191,7 @@ function History() {
                 <HistoryChart data={finishedTimers}/>
                 <HistoryList
                     history={finishedTimers}
+                    availableLabels={availableLabels}
                     onClearAll={clearAllHistory}
                     onClearToday={clearTodaysHistory}
                     onDeleteEntry={deleteOneHistoryEntry}

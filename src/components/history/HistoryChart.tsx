@@ -1,4 +1,4 @@
-import {useMemo} from "react";
+import {useMemo, useState} from "react";
 
 interface TimerData {
     timestamp: number | string;
@@ -10,12 +10,15 @@ interface HistoryChartProps {
 }
 
 export default function HistoryChart({data}: HistoryChartProps) {
-    const chartData = useMemo(() => {
-        const today = new Date();
-        const days = [];
+    const [weekOffset, setWeekOffset] = useState(0);
 
+    const chartData = useMemo(() => {
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() - (weekOffset * 7));
+
+        const days = [];
         for (let i = 6; i >= 0; i--) {
-            const d = new Date(today);
+            const d = new Date(endDate);
             d.setDate(d.getDate() - i);
             days.push(d);
         }
@@ -31,12 +34,20 @@ export default function HistoryChart({data}: HistoryChartProps) {
             }, 0);
 
             return {
-                dateLabel: day.toLocaleDateString('en-US', {weekday: 'short'}),
+                dateLabel: day.toLocaleDateString('en-US', {weekday: 'short'}), // "Mon"
+                monthDay: day.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}), // "Jan 12"
                 fullDate: day.toLocaleDateString(),
                 minutes: Math.floor(totalSeconds / 60),
             };
         });
-    }, [data]);
+    }, [data, weekOffset]);
+
+    const averageMinutes = useMemo(() => {
+        const total = chartData.reduce((acc, curr) => acc + curr.minutes, 0);
+        return Math.round(total / 7);
+    }, [chartData]);
+
+    const dateRangeLabel = `${chartData[0].monthDay} – ${chartData[6].monthDay}`;
 
     const maxMinutes: number = Math.max(...chartData.map(d => d.minutes));
     let stepSize: number = 60;
@@ -49,7 +60,6 @@ export default function HistoryChart({data}: HistoryChartProps) {
     } else stepSize = 120;
 
     const yMax = Math.max(stepSize, Math.ceil(maxMinutes / stepSize) * stepSize);
-
     const yTicks = [];
     for (let i = stepSize; i <= yMax; i += stepSize) {
         yTicks.push(i);
@@ -57,7 +67,48 @@ export default function HistoryChart({data}: HistoryChartProps) {
 
     return (
         <div className="w-full max-w-2xl mx-auto p-10 bg-white/5 rounded-lg border border-gray-200/20 shadow-sm mt-8">
-            <h2 className="text-lg font-semibold mb-6 text-gray-200">Last 7 Days Activity</h2>
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h2 className="text-lg font-semibold text-gray-200">
+                        {weekOffset === 0 ? "Last 7 Days" : `${weekOffset} Week${weekOffset > 1 ? 's' : ''} Ago`}
+                    </h2>
+                    <p className="text-sm text-gray-400 mt-1 flex items-center gap-2">
+                        <span>{dateRangeLabel}</span>
+                        <span className="w-1 h-1 rounded-full bg-gray-600"></span>
+                        <span>Daily average: <span
+                            className="text-gray-200 font-medium">{averageMinutes} min</span></span>
+                    </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setWeekOffset(prev => prev + 1)}
+                        className="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        title="Previous Week"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
+
+                    <button
+                        onClick={() => setWeekOffset(prev => Math.max(0, prev - 1))}
+                        disabled={weekOffset === 0}
+                        className={`p-1.5 rounded-md transition-colors ${
+                            weekOffset === 0
+                                ? "text-gray-700 cursor-not-allowed"
+                                : "hover:bg-white/10 text-gray-400 hover:text-white"
+                        }`}
+                        title="Next Week"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
             <div className="relative h-64 w-full flex">
                 <div className="flex flex-col justify-between h-full pr-2 text-xs text-gray-500 py-6 pb-8"></div>
