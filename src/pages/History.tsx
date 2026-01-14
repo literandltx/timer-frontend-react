@@ -150,13 +150,14 @@ function History() {
         setFinishedTimers(prev => prev.filter((_, index) => index !== indexToDelete));
     };
 
-    const editHistoryEntry = (index: number, newTimeInSeconds: number, newLabel: string) => {
+    const editHistoryEntry = (index: number, newTimeInSeconds: number, newLabel: string, newTimestamp: number) => {
         setFinishedTimers(prev => {
             const copy = [...prev];
             copy[index] = {
                 ...copy[index],
                 timeAmount: newTimeInSeconds,
-                label: newLabel
+                label: newLabel,
+                timestamp: newTimestamp
             };
             return copy;
         });

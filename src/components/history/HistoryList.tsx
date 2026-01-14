@@ -7,7 +7,7 @@ type HistoryListProps = {
     onClearAll: () => void;
     onClearToday: () => void;
     onDeleteEntry: (index: number) => void;
-    onEditEntry: (index: number, newTime: number, newLabel: string) => void;
+    onEditEntry: (index: number, newTime: number, newLabel: string, newTimestamp: number) => void;
 };
 
 export default function HistoryList({
@@ -21,6 +21,7 @@ export default function HistoryList({
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editValue, setEditValue] = useState<string>("");
     const [editLabel, setEditLabel] = useState<string>("");
+    const [editDate, setEditDate] = useState<string>("");
 
     if (history.length === 0) {
         return <div className="p-4 text-center">No history available.</div>;
@@ -30,27 +31,37 @@ export default function HistoryList({
         .map((item, index) => ({...item, originalIndex: index}))
         .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-    const handleStartEdit = (index: number, currentSeconds: number, currentLabel: string) => {
+    const handleStartEdit = (index: number, currentSeconds: number, currentLabel: string, currentTimestamp: number) => {
         setEditingIndex(index);
         const minutes: number = Math.round((currentSeconds / 60) * 100) / 100;
         setEditValue(minutes.toString());
         setEditLabel(currentLabel);
+
+        const date = new Date(currentTimestamp);
+        const offset = date.getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(date.getTime() - offset)).toISOString().slice(0, 16);
+        setEditDate(localISOTime);
     };
 
     const handleSaveEdit = (index: number) => {
         const minutes = parseFloat(editValue);
-        if (!isNaN(minutes) && minutes >= 0) {
-            onEditEntry(index, Math.round(minutes * 60), editLabel);
+        const newTimestamp = new Date(editDate).getTime();
+
+        if (!isNaN(minutes) && minutes >= 0 && !isNaN(newTimestamp)) {
+            onEditEntry(index, Math.round(minutes * 60), editLabel, newTimestamp);
         }
+
         setEditingIndex(null);
         setEditValue("");
         setEditLabel("");
+        setEditDate("");
     };
 
     const handleCancelEdit = () => {
         setEditingIndex(null);
         setEditValue("");
         setEditLabel("");
+        setEditDate("");
     };
 
     return (
@@ -98,7 +109,6 @@ export default function HistoryList({
                                             value={editValue}
                                             onChange={(e) => setEditValue(e.target.value)}
                                             className="w-20 px-1 py-0.5 text-sm text-black rounded"
-                                            autoFocus
                                         />
                                         <span className="text-xs text-gray-400">min</span>
                                     </div>
@@ -110,7 +120,14 @@ export default function HistoryList({
                             </div>
 
                             <div className="flex items-center gap-3">
-                                {!isEditing && (
+                                {isEditing ? (
+                                    <input
+                                        type="datetime-local"
+                                        value={editDate}
+                                        onChange={(e) => setEditDate(e.target.value)}
+                                        className="bg-neutral-700 text-white text-xs p-1 rounded border border-neutral-600"
+                                    />
+                                ) : (
                                     <span className="text-sm text-gray-400 text-right">
                                         {new Date(data.timestamp).toLocaleString()}
                                     </span>
@@ -141,7 +158,7 @@ export default function HistoryList({
                                     ) : (
                                         <>
                                             <button
-                                                onClick={() => handleStartEdit(originalIndex, data.timeAmount, data.label)}
+                                                onClick={() => handleStartEdit(originalIndex, data.timeAmount, data.label, data.timestamp)}
                                                 className="text-neutral-500 hover:text-sky-400 transition-colors p-1 rounded hover:bg-white/10"
                                                 title="Edit entry"
                                             >
