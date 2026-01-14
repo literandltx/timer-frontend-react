@@ -34,7 +34,8 @@ export default function HistoryChart({data}: HistoryChartProps) {
             }, 0);
 
             return {
-                dateLabel: day.toLocaleDateString('en-US', {weekday: 'short'}),
+                dateLabel: day.toLocaleDateString('en-US', {weekday: 'short'}), // "Mon"
+                monthDay: day.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}), // "Jan 12"
                 fullDate: day.toLocaleDateString(),
                 minutes: Math.floor(totalSeconds / 60),
             };
@@ -45,6 +46,8 @@ export default function HistoryChart({data}: HistoryChartProps) {
         const total = chartData.reduce((acc, curr) => acc + curr.minutes, 0);
         return Math.round(total / 7);
     }, [chartData]);
+
+    const dateRangeLabel = `${chartData[0].monthDay} – ${chartData[6].monthDay}`;
 
     const maxMinutes: number = Math.max(...chartData.map(d => d.minutes));
     let stepSize: number = 60;
@@ -69,8 +72,11 @@ export default function HistoryChart({data}: HistoryChartProps) {
                     <h2 className="text-lg font-semibold text-gray-200">
                         {weekOffset === 0 ? "Last 7 Days" : `${weekOffset} Week${weekOffset > 1 ? 's' : ''} Ago`}
                     </h2>
-                    <p className="text-sm text-gray-400 mt-1">
-                        Daily Average: <span className="text-gray-200 font-medium">{averageMinutes} min</span>
+                    <p className="text-sm text-gray-400 mt-1 flex items-center gap-2">
+                        <span>{dateRangeLabel}</span>
+                        <span className="w-1 h-1 rounded-full bg-gray-600"></span>
+                        <span>Daily average: <span
+                            className="text-gray-200 font-medium">{averageMinutes} min</span></span>
                     </p>
                 </div>
 
