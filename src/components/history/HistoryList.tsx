@@ -91,6 +91,22 @@ export default function HistoryList({
 
                             <div className="flex flex-col pl-2">
                                 {isEditing ? (
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <input
+                                            type="number"
+                                            value={editValue}
+                                            onChange={(e) => setEditValue(e.target.value)}
+                                            className="w-20 px-1 py-0.5 text-sm text-white bg-transparent rounded border border-white/30 focus:border-white focus:outline-none"
+                                        />
+                                        <span className="text-xs text-gray-400">min</span>
+                                    </div>
+                                ) : (
+                                    <span className="font-bold text-lg">
+                                        {Math.max(1, data.timeAmount / 60).toFixed(0)} min
+                                    </span>
+                                )}
+
+                                {isEditing ? (
                                     <div className="flex flex-col gap-1 mb-1">
                                         <select
                                             value={editLabel}
@@ -106,22 +122,8 @@ export default function HistoryList({
                                         </select>
                                     </div>
                                 ) : (
-                                    <span className="font-bold text-lg">{data.label}</span>
-                                )}
-
-                                {isEditing ? (
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <input
-                                            type="number"
-                                            value={editValue}
-                                            onChange={(e) => setEditValue(e.target.value)}
-                                            className="w-20 px-1 py-0.5 text-sm text-black rounded"
-                                        />
-                                        <span className="text-xs text-gray-400">min</span>
-                                    </div>
-                                ) : (
                                     <span className="text-sm text-gray-300">
-                                        {(data.timeAmount / 60).toFixed(2)} min
+                                        {data.label}
                                     </span>
                                 )}
                             </div>
