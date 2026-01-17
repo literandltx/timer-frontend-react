@@ -53,7 +53,7 @@ export default function AddEntryModal({availableLabels, onSave}: AddEntryModalPr
             <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={close} __demoMode>
                 <DialogBackdrop
                     transition
-                    className="fixed inset-0 bg-black/20 backdrop-blur-sm transition duration-300 ease-out data-[closed]:opacity-0"
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm duration-0 ease-out data-[closed]:opacity-0"
                 />
                 <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
 
