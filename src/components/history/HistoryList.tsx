@@ -1,9 +1,11 @@
 import {useState} from "react";
 import type {TimerData} from "../home/Timer.tsx";
+import AddEntryModal from "./AddEntryModal.tsx";
 
 type HistoryListProps = {
     history: TimerData[];
     availableLabels: string[];
+    onAddEntry: (label: string, durationMinutes: number, timestamp: number) => void;
     onClearAll: () => void;
     onClearToday: () => void;
     onDeleteEntry: (index: number) => void;
@@ -13,6 +15,7 @@ type HistoryListProps = {
 export default function HistoryList({
                                         history,
                                         availableLabels,
+                                        onAddEntry,
                                         onClearAll,
                                         onClearToday,
                                         onDeleteEntry,
@@ -69,6 +72,10 @@ export default function HistoryList({
             <h2 className="text-xl font-bold">Timer History</h2>
 
             <div className="flex gap-4">
+                <AddEntryModal
+                    availableLabels={availableLabels}
+                    onSave={onAddEntry}
+                />
                 <button onClick={onClearToday}>Clear Today</button>
                 <button onClick={onClearAll}>Clear All</button>
             </div>

@@ -163,6 +163,19 @@ function History() {
         });
     };
 
+    const handleAddManualEntry = (label: string, durationMinutes: number, timestamp: number) => {
+        const newEntry: TimerData = {
+            label: label,
+            timeAmount: durationMinutes * 60,
+            timestamp: timestamp
+        };
+
+        setFinishedTimers(prev => {
+            const updated = [...prev, newEntry];
+            return updated.sort((a, b) => b.timestamp - a.timestamp);
+        });
+    };
+
     return (
         <div>
             <NavLink to={"/"} className={"absolute top-[2%] left-[2%]"}>Home</NavLink>
@@ -194,11 +207,11 @@ function History() {
                     availableLabels={availableLabels}
                     onClearAll={clearAllHistory}
                     onClearToday={clearTodaysHistory}
+                    onAddEntry={handleAddManualEntry}
                     onDeleteEntry={deleteOneHistoryEntry}
                     onEditEntry={editHistoryEntry}
                 />
             </div>
-
         </div>
     )
 }
