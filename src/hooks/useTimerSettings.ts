@@ -61,14 +61,11 @@ export function useTimerSettings() {
         });
     };
 
-    // --- NEW FUNCTION ---
     const removeOption = (id: number) => {
-        // Prevent deleting the last remaining option
         if (activeSettings.options.length <= 1) return;
 
         const newOptions = activeSettings.options.filter(o => o.id !== id);
 
-        // If we deleted the currently selected option, select the first available one
         let newPreference = activeSettings.preference;
         if (activeSettings.preference.id === id) {
             newPreference = newOptions[0];

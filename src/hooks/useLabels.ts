@@ -1,4 +1,5 @@
-import {useState, useEffect} from "react";
+import {useEffect} from "react";
+import {useLocalStorage} from "./useLocalStorage";
 import {LABEL_ACTIONS} from "../types/labels.ts";
 
 const LOCAL_STORAGE_KEY_LABEL_OPTIONS = 'timer_label_options';
@@ -11,39 +12,25 @@ interface UseLabelsReturn {
 }
 
 export function useLabels(initialDefaults: string[] = ['Focus', 'Learn', 'Recharge']): UseLabelsReturn {
-    const [labels, setLabels] = useState<string[]>(() => {
-        if (typeof window !== 'undefined') {
-            const saved: string | null = localStorage.getItem(LOCAL_STORAGE_KEY_LABEL_OPTIONS);
-            return saved ? JSON.parse(saved) : initialDefaults;
-        }
-        return initialDefaults;
-    });
+    const [labels, setLabels] = useLocalStorage<string[]>(
+        LOCAL_STORAGE_KEY_LABEL_OPTIONS,
+        initialDefaults
+    );
 
-    const [activeLabel, setActiveLabel] = useState<string>(() => {
-        if (typeof window !== 'undefined') {
-            const saved: string | null = localStorage.getItem(LOCAL_STORAGE_KEY_ACTIVE);
-            if (saved !== null) {
-                const parsedLabel = JSON.parse(saved);
-                if (labels.includes(parsedLabel)) {
-                    return parsedLabel;
-                }
-            }
-        }
-
-        return labels[0] || "";
-    });
+    const [activeLabel, setActiveLabel] = useLocalStorage<string>(
+        LOCAL_STORAGE_KEY_ACTIVE,
+        initialDefaults[0]
+    );
 
     useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_KEY_LABEL_OPTIONS, JSON.stringify(labels));
-    }, [labels]);
-
-    useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_KEY_ACTIVE, JSON.stringify(activeLabel));
-    }, [activeLabel]);
+        if (!labels.includes(activeLabel) && labels.length > 0) {
+            setActiveLabel(labels[0]);
+        }
+    }, [labels, activeLabel, setActiveLabel]);
 
     const handleLabelChange = (selectedValue: string): void => {
         if (selectedValue === LABEL_ACTIONS.ADD_NEW) {
-            const newLabel: string | null = window.prompt("Enter a new label name:", "Label");
+            const newLabel = window.prompt("Enter a new label name:", "Label");
             if (newLabel && newLabel.trim() !== "") {
                 setLabels((prev) => [...prev, newLabel]);
                 setActiveLabel(newLabel);
