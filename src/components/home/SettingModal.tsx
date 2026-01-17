@@ -1,4 +1,4 @@
-import {Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle} from '@headlessui/react';
+import {Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Input} from '@headlessui/react';
 import {useState} from 'react';
 import {useTimerSettings} from '../../hooks/useTimerSettings';
 import {type TimerOption} from '../../types/settings';
@@ -9,11 +9,20 @@ interface SettingModalProps {
 
 function SettingModal({onTimeChange}: SettingModalProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const {selectedOption, availableOptions, savePreference} = useTimerSettings();
+    const [customValue, setCustomValue] = useState('');
+    const {selectedOption, availableOptions, savePreference, addCustomOption} = useTimerSettings();
 
     function handleSelect(option: TimerOption) {
         savePreference(option);
         onTimeChange(option.value);
+    }
+
+    function handleAddCustom() {
+        const minutes = parseInt(customValue, 10);
+        if (!isNaN(minutes) && minutes > 0) {
+            addCustomOption(minutes);
+            setCustomValue('');
+        }
     }
 
     return (
@@ -29,7 +38,7 @@ function SettingModal({onTimeChange}: SettingModalProps) {
                     onClose={() => setIsOpen(false)}>
                 <DialogBackdrop
                     transition
-                    className="fixed inset-0 bg-black/20 backdrop-blur-sm duration-0 ease-out data-[closed]:opacity-0"
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm duration-300 ease-out data-[closed]:opacity-0"
                 />
 
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -38,28 +47,48 @@ function SettingModal({onTimeChange}: SettingModalProps) {
                             transition
                             className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
                         >
-                            <DialogTitle as="h3" className="text-base font-medium text-white">
-                                <p className="text-2l text-white/60 mb-4">Select Duration</p>
+                            <DialogTitle as="div" className="flex justify-between items-center mb-6">
+                                <h3 className="text-lg font-medium text-white">Timer Settings</h3>
                             </DialogTitle>
 
-                            <div className="mt-6">
-
-                                <div className="flex gap-4">
+                            <div>
+                                <p className="text-sm text-white/50 mb-3">Duration (Minutes)</p>
+                                <div className="grid grid-cols-4 gap-3">
                                     {availableOptions.map((option) => (
                                         <Button
                                             key={option.id}
                                             onClick={() => handleSelect(option)}
                                             className={`
-                        flex-1 rounded-lg px-4 py-2 text-sm font-semibold shadow-inner shadow-white/10 focus:outline-none transition-all
-                        ${selectedOption.id === option.id
+                                                rounded-lg px-2 py-2 text-sm font-semibold shadow-inner shadow-white/10 focus:outline-none transition-all
+                                                ${selectedOption.id === option.id
                                                 ? 'bg-white text-black scale-105'
                                                 : 'bg-white/10 text-white hover:bg-white/20'
                                             }
-                      `}
+                                            `}
                                         >
                                             {option.value}
                                         </Button>
                                     ))}
+                                </div>
+                            </div>
+
+                            <div className="mt-6 pt-6 border-t border-white/10">
+                                <p className="text-sm text-white/50 mb-3">Add Custom Duration</p>
+                                <div className="flex gap-3">
+                                    <Input
+                                        type="number"
+                                        placeholder="Min"
+                                        value={customValue}
+                                        onChange={(e) => setCustomValue(e.target.value)}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleAddCustom()}
+                                        className="w-full rounded-lg border-none bg-white/10 py-1.5 px-3 text-sm/6 text-white focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 placeholder:text-white/30"
+                                    />
+                                    <Button
+                                        onClick={handleAddCustom}
+                                        className="rounded-lg bg-white/10 py-1.5 px-4 text-sm font-semibold text-white hover:bg-white/20 shadow-inner shadow-white/10 focus:outline-none"
+                                    >
+                                        Add
+                                    </Button>
                                 </div>
                             </div>
 

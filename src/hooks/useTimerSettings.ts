@@ -1,41 +1,76 @@
 import {useState} from 'react';
-import {TIMER_OPTIONS} from '../types/settings';
-import type {TimerOption, UserSettings} from '../types/settings';
+import {type TimerOption, type UserSettings, DEFAULT_OPTIONS} from '../types/settings';
 
-const STORAGE_KEY = 'user_timer_pref_v2';
+const STORAGE_KEY = 'user_timer_pref_v4'; // Bump version for safety
 
-export function useTimerSettings(): {
-    selectedOption: TimerOption;
-    availableOptions: TimerOption[];
-    savePreference: (option: TimerOption) => void
-} {
+function createDefaultSettings(): UserSettings {
+    return {
+        id: crypto.randomUUID(), // temp_id
+        lastUpdated: Date.now(),
+        preference: DEFAULT_OPTIONS[1],
+        options: DEFAULT_OPTIONS
+    };
+}
+
+export function useTimerSettings() {
     const [activeSettings, setActiveSettings] = useState<UserSettings>(() => {
         if (typeof window === 'undefined') {
-            return {lastUpdated: Date.now(), preference: TIMER_OPTIONS[1]};
+            return createDefaultSettings();
         }
 
         try {
-            const saved: string | null = localStorage.getItem(STORAGE_KEY);
-            return saved ? JSON.parse(saved) : {lastUpdated: Date.now(), preference: TIMER_OPTIONS[1]};
-        } catch (error) {
-            console.warn('Error reading settings', error);
-            return {lastUpdated: Date.now(), preference: TIMER_OPTIONS[1]};
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+
+                return {
+                    ...parsed,
+                    id: parsed.id || crypto.randomUUID(),
+                    options: parsed.options || DEFAULT_OPTIONS
+                };
+            }
+        } catch (e) {
+            console.warn('Error parsing settings', e);
         }
+
+        return createDefaultSettings();
     });
 
-    const savePreference = (option: TimerOption) => {
-        const newSettings: UserSettings = {
-            lastUpdated: Date.now(),
-            preference: option,
-        };
-
+    const persist = (newSettings: UserSettings) => {
         setActiveSettings(newSettings);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
+
+        // TODO: Sync with backend
+    };
+
+    const savePreference = (option: TimerOption) => {
+        persist({...activeSettings, preference: option, lastUpdated: Date.now()});
+    };
+
+    const addCustomOption = (minutes: number) => {
+        if (activeSettings.options.some(o => o.value === minutes)) return;
+
+        const newOption: TimerOption = {
+            id: Date.now(),
+            value: minutes,
+            label: `${minutes} Min`
+        };
+
+        const updatedOptions = [...activeSettings.options, newOption]
+            .sort((a, b) => a.value - b.value);
+
+        persist({
+            ...activeSettings,
+            options: updatedOptions,
+            lastUpdated: Date.now()
+        });
     };
 
     return {
+        settingsId: activeSettings.id,
         selectedOption: activeSettings.preference,
-        availableOptions: TIMER_OPTIONS,
+        availableOptions: activeSettings.options,
         savePreference,
+        addCustomOption
     };
 }
