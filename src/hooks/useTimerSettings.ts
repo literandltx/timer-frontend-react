@@ -1,11 +1,11 @@
 import {useState} from 'react';
 import {type TimerOption, type UserSettings, DEFAULT_OPTIONS} from '../types/settings';
 
-const STORAGE_KEY = 'user_timer_pref_v4'; // Bump version for safety
+const STORAGE_KEY = 'user_timer_pref_v4';
 
 function createDefaultSettings(): UserSettings {
     return {
-        id: crypto.randomUUID(), // temp_id
+        id: crypto.randomUUID(),
         lastUpdated: Date.now(),
         preference: DEFAULT_OPTIONS[1],
         options: DEFAULT_OPTIONS
@@ -17,12 +17,10 @@ export function useTimerSettings() {
         if (typeof window === 'undefined') {
             return createDefaultSettings();
         }
-
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 const parsed = JSON.parse(saved);
-
                 return {
                     ...parsed,
                     id: parsed.id || crypto.randomUUID(),
@@ -32,15 +30,12 @@ export function useTimerSettings() {
         } catch (e) {
             console.warn('Error parsing settings', e);
         }
-
         return createDefaultSettings();
     });
 
     const persist = (newSettings: UserSettings) => {
         setActiveSettings(newSettings);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
-
-        // TODO: Sync with backend
     };
 
     const savePreference = (option: TimerOption) => {
@@ -66,11 +61,33 @@ export function useTimerSettings() {
         });
     };
 
+    // --- NEW FUNCTION ---
+    const removeOption = (id: number) => {
+        // Prevent deleting the last remaining option
+        if (activeSettings.options.length <= 1) return;
+
+        const newOptions = activeSettings.options.filter(o => o.id !== id);
+
+        // If we deleted the currently selected option, select the first available one
+        let newPreference = activeSettings.preference;
+        if (activeSettings.preference.id === id) {
+            newPreference = newOptions[0];
+        }
+
+        persist({
+            ...activeSettings,
+            preference: newPreference,
+            options: newOptions,
+            lastUpdated: Date.now()
+        });
+    };
+
     return {
         settingsId: activeSettings.id,
         selectedOption: activeSettings.preference,
         availableOptions: activeSettings.options,
         savePreference,
-        addCustomOption
+        addCustomOption,
+        removeOption
     };
 }

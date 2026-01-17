@@ -10,7 +10,14 @@ interface SettingModalProps {
 function SettingModal({onTimeChange}: SettingModalProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [customValue, setCustomValue] = useState('');
-    const {selectedOption, availableOptions, savePreference, addCustomOption} = useTimerSettings();
+
+    const {
+        selectedOption,
+        availableOptions,
+        savePreference,
+        addCustomOption,
+        removeOption
+    } = useTimerSettings();
 
     function handleSelect(option: TimerOption) {
         savePreference(option);
@@ -23,6 +30,11 @@ function SettingModal({onTimeChange}: SettingModalProps) {
             addCustomOption(minutes);
             setCustomValue('');
         }
+    }
+
+    function handleRemove(e: React.MouseEvent, id: number) {
+        e.stopPropagation();
+        removeOption(id);
     }
 
     return (
@@ -48,26 +60,38 @@ function SettingModal({onTimeChange}: SettingModalProps) {
                             className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
                         >
                             <DialogTitle as="div" className="flex justify-between items-center mb-6">
-                                <h3 className="text-lg font-medium text-white">Timer Settings</h3>
+                                <h3 className="text-lg font-medium text-white">
+                                    Timer Settings <span className="text-sm text-gray-400 ml-1">(Experimental)</span>
+                                </h3>
                             </DialogTitle>
 
                             <div>
-                                <p className="text-sm text-white/50 mb-3">Duration (Minutes)</p>
                                 <div className="grid grid-cols-4 gap-3">
                                     {availableOptions.map((option) => (
-                                        <Button
-                                            key={option.id}
-                                            onClick={() => handleSelect(option)}
-                                            className={`
-                                                rounded-lg px-2 py-2 text-sm font-semibold shadow-inner shadow-white/10 focus:outline-none transition-all
-                                                ${selectedOption.id === option.id
-                                                ? 'bg-white text-black scale-105'
-                                                : 'bg-white/10 text-white hover:bg-white/20'
-                                            }
-                                            `}
-                                        >
-                                            {option.value}
-                                        </Button>
+                                        <div key={option.id} className="relative group">
+                                            <Button
+                                                onClick={() => handleSelect(option)}
+                                                className={`
+                                                    w-full rounded-lg px-2 py-2 text-sm font-semibold shadow-inner shadow-white/10 focus:outline-none transition-all
+                                                    ${selectedOption.id === option.id
+                                                    ? 'bg-white text-black'
+                                                    : 'bg-white/10 text-white hover:bg-white/20'
+                                                }
+                                                `}
+                                            >
+                                                {option.value}
+                                            </Button>
+
+                                            {availableOptions.length > 1 && (
+                                                <button
+                                                    onClick={(e) => handleRemove(e, option.id)}
+                                                    className="absolute -top-1 -right-1 flex h-4 w-2 items-center justify-center rounded-full text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus:opacity-100"
+                                                    title="Remove option"
+                                                >
+                                                    x
+                                                </button>
+                                            )}
+                                        </div>
                                     ))}
                                 </div>
                             </div>
