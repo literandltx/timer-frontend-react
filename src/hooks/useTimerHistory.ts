@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback} from "react";
-import type {TimerData} from "../components/home/Timer";
+import type {TimerData} from "../types/timer.ts";
 
 const LOCAL_STORAGE_KEY_HISTORY = 'timerHistory';
 

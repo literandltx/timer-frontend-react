@@ -1,6 +1,6 @@
 import {useState} from "react";
-import type {TimerData} from "../home/Timer.tsx";
 import AddEntryModal from "./AddEntryModal.tsx";
+import type {TimerData} from "../../types/timer.ts";
 
 type HistoryListProps = {
     history: TimerData[];

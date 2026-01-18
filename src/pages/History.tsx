@@ -7,7 +7,7 @@ import {useTimerHistory} from "../hooks/useTimerHistory";
 import {useLabels} from "../hooks/useLabels.ts";
 
 import {exportHistoryToCSV, parseHistoryFromCSV} from "../utils/csvUtils";
-import type {TimerData} from "../components/home/Timer.tsx";
+import type {TimerData} from "../types/timer.ts";
 
 function History() {
     const fileInputRef = useRef<HTMLInputElement>(null);

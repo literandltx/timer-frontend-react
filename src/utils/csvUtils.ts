@@ -1,4 +1,4 @@
-import type {TimerData} from "../components/home/Timer.tsx";
+import type {TimerData} from "../types/timer.ts";
 
 export const exportHistoryToCSV = (history: TimerData[]): void => {
     if (history.length === 0) {
