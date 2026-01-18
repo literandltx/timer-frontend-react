@@ -1,11 +1,8 @@
 import {useState, useEffect} from 'react';
 import styles from './Timer.module.css';
 
-export type TimerData = {
-    label: string;
-    timeAmount: number;
-    timestamp: number;
-};
+import {formatTime} from '../../utils/timeUtils';
+import type {TimerData} from "../../types/timer.ts";
 
 type CountdownTimerProps = {
     timeAmount: number;
@@ -39,13 +36,6 @@ function Timer({timeAmount, label, timestamp, onFinish, onReset}: CountdownTimer
 
         return () => clearInterval(intervalId);
     }, [isRunning, timeLeft, label, timeAmount, timestamp, onFinish]);
-
-    const formatTime = (seconds: number): string => {
-        const minutes: number = Math.floor(seconds / 60);
-        const remainingSeconds: number = seconds % 60;
-
-        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-    };
 
     const handleClick = () => {
         if (timeLeft > 0) {
