@@ -8,9 +8,9 @@ import LabelSelector from "../components/home/LabelSelector.tsx";
 import Counter from "../components/home/Counter.tsx";
 import {useLabels} from "../hooks/useLabels";
 import {useTimerSettings} from "../hooks/useTimerSettings";
+import {useTimerHistory} from "../hooks/useTimerHistory";
 
 const SECONDS_PER_MINUTE = 60;
-const LOCAL_STORAGE_KEY_HISTORY = 'timerHistory';
 
 function Home() {
     const [timestamp] = useState<number>((): number => Date.now());
@@ -23,16 +23,9 @@ function Home() {
         addCustomOption,
         removeOption
     } = useTimerSettings();
+    const {history, addTimer} = useTimerHistory();
 
     const timeAmount: number = selectedOption.value * SECONDS_PER_MINUTE;
-    const [finishedTimers, setFinishedTimers] = useState<TimerData[]>(() => {
-        if (typeof window !== 'undefined') {
-            const saved: string | null = localStorage.getItem(LOCAL_STORAGE_KEY_HISTORY);
-            return saved ? JSON.parse(saved) : [];
-        }
-        return [];
-    });
-
     const {labels, activeLabel, handleLabelChange} = useLabels();
 
     const stopBlinking = (): void => {
@@ -57,14 +50,13 @@ function Home() {
     }, []);
 
     const handleTimerFinish = (data: TimerData): void => {
-        setFinishedTimers((prev) => [...prev, data]);
+        addTimer(data);
         startBlinking();
-
         console.log("Notification!");
     };
 
     const handleTimerReset = (data: TimerData): void => {
-        setFinishedTimers((prev) => [...prev, data]);
+        addTimer(data);
         stopBlinking();
     };
 
@@ -75,15 +67,8 @@ function Home() {
             }
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
-
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, []);
-
-    useEffect((): void => {
-        localStorage.setItem(LOCAL_STORAGE_KEY_HISTORY, JSON.stringify(finishedTimers));
-    }, [finishedTimers]);
 
     return (
         <div>
@@ -101,7 +86,7 @@ function Home() {
                     onChange={handleLabelChange}
                     options={labels}
                 />
-                <Counter count={finishedTimers.length}/>
+                <Counter count={history.length}/>
             </div>
             <div className="absolute bottom-[2%] left-[2%] flex items-center gap-2">
                 <SettingModal

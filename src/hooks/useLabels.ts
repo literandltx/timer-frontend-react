@@ -2,8 +2,8 @@ import {useEffect} from "react";
 import {useLocalStorage} from "./useLocalStorage";
 import {LABEL_ACTIONS} from "../types/labels.ts";
 
-const LOCAL_STORAGE_KEY_LABEL_OPTIONS = 'timer_label_options';
-const LOCAL_STORAGE_KEY_ACTIVE = 'timer_active_label';
+export const LOCAL_STORAGE_KEY_LABEL_OPTIONS = 'timer_label_options';
+export const LOCAL_STORAGE_KEY_ACTIVE = 'timer_active_label';
 
 interface UseLabelsReturn {
     labels: string[];
