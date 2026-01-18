@@ -10,7 +10,7 @@ import {useLabels} from "../hooks/useLabels";
 
 const SECONDS_PER_MINUTE = 60;
 const DEFAULT_DURATION_MINUTES = 40;
-const LOCAL_STORAGE_KEY_PREF = 'user_timer_preference';
+const LOCAL_STORAGE_KEY_PREF = 'user_timer_preference_v4';
 const LOCAL_STORAGE_KEY_HISTORY = 'timerHistory';
 
 function Home() {
