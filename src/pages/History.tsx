@@ -1,11 +1,13 @@
 import {useRef} from "react";
 import {NavLink} from "react-router";
 
-import type {TimerData} from "../components/home/Timer.tsx";
 import HistoryList from "../components/history/HistoryList.tsx";
 import HistoryChart from "../components/history/HistoryChart.tsx";
 import {useTimerHistory} from "../hooks/useTimerHistory";
 import {useLabels} from "../hooks/useLabels.ts";
+
+import {exportHistoryToCSV, parseHistoryFromCSV} from "../utils/csvUtils";
+import type {TimerData} from "../components/home/Timer.tsx";
 
 function History() {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -21,70 +23,22 @@ function History() {
     } = useTimerHistory();
     const {labels} = useLabels();
 
-    const exportToCSV = (): void => {
-        if (history.length === 0) {
-            alert("No history to export.");
-            return;
-        }
-
-        const headers: string[] = ["Label", "Time Amount (s)", "Timestamp (Raw)", "Date Formatted"];
-        const rows: string[] = history.map(timer => {
-            const safeLabel = `"${timer.label.replace(/"/g, '""')}"`;
-            const dateStr = `"${new Date(timer.timestamp).toLocaleString()}"`;
-            return [safeLabel, timer.timeAmount, timer.timestamp, dateStr].join(",");
-        });
-
-        const csvContent = [headers.join(","), ...rows].join("\n");
-        const blob: Blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
-        const url: string = URL.createObjectURL(blob);
-        const link: HTMLAnchorElement = document.createElement("a");
-        const fileName = `timer_history_${new Date().toISOString().slice(0, 10)}.csv`;
-
-        link.href = url;
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const exportToCSV = () => {
+        exportHistoryToCSV(history);
     };
 
     const importFromCSV = () => {
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file: File | undefined = event.target.files?.[0];
         if (!file) {
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const text = e.target?.result as string;
-            if (!text) return;
-
-            const lines = text.split('\n');
-            const newTimers: TimerData[] = [];
-
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-
-                const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-
-                if (parts.length >= 3) {
-                    let label = parts[0].trim();
-                    if (label.startsWith('"') && label.endsWith('"')) {
-                        label = label.slice(1, -1).replace(/""/g, '"');
-                    }
-
-                    const timeAmount = parseInt(parts[1], 10);
-                    const timestamp = parseInt(parts[2], 10);
-
-                    if (!isNaN(timeAmount) && !isNaN(timestamp)) {
-                        newTimers.push({label, timeAmount, timestamp});
-                    }
-                }
-            }
+        try {
+            const newTimers: TimerData[] = await parseHistoryFromCSV(file);
 
             if (newTimers.length > 0) {
                 importHistory(newTimers);
@@ -92,10 +46,12 @@ function History() {
             } else {
                 alert("Could not parse any valid timer data from this file.");
             }
-        };
-
-        reader.readAsText(file);
-        event.target.value = '';
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred while reading the file.");
+        } finally {
+            event.target.value = '';
+        }
     };
 
     return (
@@ -131,7 +87,8 @@ function History() {
                 />
             </div>
         </div>
-    )
+    );
 }
 
 export default History
+
