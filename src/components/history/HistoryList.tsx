@@ -1,9 +1,11 @@
 import {useState} from "react";
-import type {TimerData} from "../home/Timer.tsx";
+import AddEntryModal from "./AddEntryModal.tsx";
+import type {TimerData} from "../../types/timer.ts";
 
 type HistoryListProps = {
     history: TimerData[];
     availableLabels: string[];
+    onAddEntry: (label: string, durationMinutes: number, timestamp: number) => void;
     onClearAll: () => void;
     onClearToday: () => void;
     onDeleteEntry: (index: number) => void;
@@ -13,6 +15,7 @@ type HistoryListProps = {
 export default function HistoryList({
                                         history,
                                         availableLabels,
+                                        onAddEntry,
                                         onClearAll,
                                         onClearToday,
                                         onDeleteEntry,
@@ -69,6 +72,10 @@ export default function HistoryList({
             <h2 className="text-xl font-bold">Timer History</h2>
 
             <div className="flex gap-4">
+                <AddEntryModal
+                    availableLabels={availableLabels}
+                    onSave={onAddEntry}
+                />
                 <button onClick={onClearToday}>Clear Today</button>
                 <button onClick={onClearAll}>Clear All</button>
             </div>
@@ -83,6 +90,22 @@ export default function HistoryList({
                             className="flex justify-between items-center border transition-colors duration-200 border-neutral-700 p-3 rounded bg-neutral-800 hover:bg-sky-900/30 group">
 
                             <div className="flex flex-col pl-2">
+                                {isEditing ? (
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <input
+                                            type="number"
+                                            value={editValue}
+                                            onChange={(e) => setEditValue(e.target.value)}
+                                            className="w-20 px-1 py-0.5 text-sm text-white bg-transparent rounded border border-white/30 focus:border-white focus:outline-none"
+                                        />
+                                        <span className="text-xs text-gray-400">min</span>
+                                    </div>
+                                ) : (
+                                    <span className="font-bold text-lg">
+                                        {Math.max(1, data.timeAmount / 60).toFixed(0)} min
+                                    </span>
+                                )}
+
                                 {isEditing ? (
                                     <div className="flex flex-col gap-1 mb-1">
                                         <select
@@ -99,22 +122,8 @@ export default function HistoryList({
                                         </select>
                                     </div>
                                 ) : (
-                                    <span className="font-bold text-lg">{data.label}</span>
-                                )}
-
-                                {isEditing ? (
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <input
-                                            type="number"
-                                            value={editValue}
-                                            onChange={(e) => setEditValue(e.target.value)}
-                                            className="w-20 px-1 py-0.5 text-sm text-black rounded"
-                                        />
-                                        <span className="text-xs text-gray-400">min</span>
-                                    </div>
-                                ) : (
                                     <span className="text-sm text-gray-300">
-                                        {(data.timeAmount / 60).toFixed(2)} min
+                                        {data.label}
                                     </span>
                                 )}
                             </div>

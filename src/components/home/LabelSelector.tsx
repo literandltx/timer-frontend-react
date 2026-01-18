@@ -1,4 +1,5 @@
 import { Select } from '@headlessui/react'
+import {LABEL_ACTIONS} from "../../types/labels.ts";
 
 interface LabelSelectorProps {
     value: string;
@@ -14,22 +15,22 @@ function LabelSelector({value, onChange, options}: LabelSelectorProps) {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 aria-label="Label"
-                className="rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
+                className="rounded-md bg-black/15 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
             >
                 {options.map((opt) => (
-                    <option key={opt} value={opt} className="text-black">
+                    <option key={opt} value={opt}>
                         {opt}
                     </option>
                 ))}
 
                 <option disabled>──────────</option>
 
-                <option value="ADD_NEW" className="text-blue-600 font-bold">
+                <option value={LABEL_ACTIONS.ADD_NEW}>
                     Create new label
                 </option>
 
                 {value && (
-                    <option value="DELETE_CURRENT" className="font-bold">
+                    <option value={LABEL_ACTIONS.DELETE_CURRENT}>
                         Delete: {value}
                     </option>
                 )}
