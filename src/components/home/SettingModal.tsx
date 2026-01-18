@@ -1,40 +1,42 @@
 import {Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Input} from '@headlessui/react';
 import {useState} from 'react';
-import {useTimerSettings} from '../../hooks/useTimerSettings';
 import {type TimerOption} from '../../types/settings';
 
 interface SettingModalProps {
-    onTimeChange: (minutes: number) => void;
+    selectedOption: TimerOption;
+    availableOptions: TimerOption[];
+    onSelect: (option: TimerOption) => void;
+    onAddCustom: (minutes: number) => void;
+    onRemove: (id: number) => void;
 }
 
-function SettingModal({onTimeChange}: SettingModalProps) {
+function SettingModal({
+                          selectedOption,
+                          availableOptions,
+                          onSelect,
+                          onAddCustom,
+                          onRemove
+                      }: SettingModalProps) {
+
     const [isOpen, setIsOpen] = useState(false);
     const [customValue, setCustomValue] = useState('');
 
-    const {
-        selectedOption,
-        availableOptions,
-        savePreference,
-        addCustomOption,
-        removeOption
-    } = useTimerSettings();
-
     function handleSelect(option: TimerOption) {
-        savePreference(option);
-        onTimeChange(option.value);
+        onSelect(option);
+        setIsOpen(false);
     }
 
     function handleAddCustom() {
         const minutes = parseInt(customValue, 10);
         if (!isNaN(minutes) && minutes > 0) {
-            addCustomOption(minutes);
+            onAddCustom(minutes);
             setCustomValue('');
         }
     }
 
     function handleRemove(e: React.MouseEvent, id: number) {
         e.stopPropagation();
-        removeOption(id);
+        onRemove(id);
     }
 
     return (
@@ -88,7 +90,7 @@ function SettingModal({onTimeChange}: SettingModalProps) {
                                                     className="absolute -top-1 -right-1 flex h-4 w-2 items-center justify-center rounded-full text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus:opacity-100"
                                                     title="Remove option"
                                                 >
-                                                    x
+                                                    ✕
                                                 </button>
                                             )}
                                         </div>

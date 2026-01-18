@@ -1,4 +1,4 @@
-import './Home.css'
+import './Home.css';
 import {useEffect, useState, useRef} from "react";
 import {NavLink} from "react-router";
 
@@ -7,24 +7,24 @@ import SettingModal from "../components/home/SettingModal.tsx";
 import LabelSelector from "../components/home/LabelSelector.tsx";
 import Counter from "../components/home/Counter.tsx";
 import {useLabels} from "../hooks/useLabels";
+import {useTimerSettings} from "../hooks/useTimerSettings";
 
 const SECONDS_PER_MINUTE = 60;
-const DEFAULT_DURATION_MINUTES = 40;
-const LOCAL_STORAGE_KEY_PREF = 'user_timer_preference_v4';
 const LOCAL_STORAGE_KEY_HISTORY = 'timerHistory';
 
 function Home() {
     const [timestamp] = useState<number>((): number => Date.now());
     const blinkIntervalRef = useRef<number | null>(null);
 
-    const [timeAmount, setTimeAmount] = useState<number>((): number => {
-        if (typeof window !== 'undefined') {
-            const saved: string | null = localStorage.getItem(LOCAL_STORAGE_KEY_PREF);
-            return saved ? parseInt(saved, 10) * SECONDS_PER_MINUTE : DEFAULT_DURATION_MINUTES * SECONDS_PER_MINUTE;
-        }
-        return DEFAULT_DURATION_MINUTES * SECONDS_PER_MINUTE;
-    });
+    const {
+        selectedOption,
+        availableOptions,
+        savePreference,
+        addCustomOption,
+        removeOption
+    } = useTimerSettings();
 
+    const timeAmount: number = selectedOption.value * SECONDS_PER_MINUTE;
     const [finishedTimers, setFinishedTimers] = useState<TimerData[]>(() => {
         if (typeof window !== 'undefined') {
             const saved: string | null = localStorage.getItem(LOCAL_STORAGE_KEY_HISTORY);
@@ -55,10 +55,6 @@ function Home() {
     useEffect(() => {
         return () => stopBlinking();
     }, []);
-
-    const handleTimeChange = (minutes: number): void => {
-        setTimeAmount(minutes * SECONDS_PER_MINUTE);
-    };
 
     const handleTimerFinish = (data: TimerData): void => {
         setFinishedTimers((prev) => [...prev, data]);
@@ -108,7 +104,13 @@ function Home() {
                 <Counter count={finishedTimers.length}/>
             </div>
             <div className="absolute bottom-[2%] left-[2%] flex items-center gap-2">
-                <SettingModal onTimeChange={handleTimeChange}/>
+                <SettingModal
+                    selectedOption={selectedOption}
+                    availableOptions={availableOptions}
+                    onSelect={savePreference}
+                    onAddCustom={addCustomOption}
+                    onRemove={removeOption}
+                />
                 <NavLink to={"/history"}>History</NavLink>
             </div>
         </div>
