@@ -1,5 +1,5 @@
 import './Home.css';
-import {useEffect, useState, useRef} from "react";
+import {useState} from "react";
 import {NavLink} from "react-router";
 
 import Timer from "../components/home/Timer.tsx";
@@ -9,13 +9,14 @@ import Counter from "../components/home/Counter.tsx";
 import {useLabels} from "../hooks/useLabels";
 import {useTimerSettings} from "../hooks/useTimerSettings";
 import {useTimerHistory} from "../hooks/useTimerHistory";
+import {useTabNotification} from "../hooks/useTabNotification"; // Import the new hook
 import type {TimerData} from "../types/timer.ts";
 
 const SECONDS_PER_MINUTE = 60;
 
 function Home() {
     const [timestamp] = useState<number>((): number => Date.now());
-    const blinkIntervalRef = useRef<number | null>(null);
+    const {startBlinking, stopBlinking} = useTabNotification("timer");
 
     const {
         selectedOption,
@@ -29,27 +30,6 @@ function Home() {
     const timeAmount: number = selectedOption.value * SECONDS_PER_MINUTE;
     const {labels, activeLabel, handleLabelChange} = useLabels();
 
-    const stopBlinking = (): void => {
-        if (blinkIntervalRef.current) {
-            clearInterval(blinkIntervalRef.current);
-            blinkIntervalRef.current = null;
-        }
-        document.title = "timer";
-    };
-
-    const startBlinking = (): void => {
-        stopBlinking();
-        let isAlert: boolean = true;
-        blinkIntervalRef.current = window.setInterval(() => {
-            document.title = isAlert ? "⚠️ TIMER! ⚠️" : "timer";
-            isAlert = !isAlert;
-        }, 1000);
-    };
-
-    useEffect(() => {
-        return () => stopBlinking();
-    }, []);
-
     const handleTimerFinish = (data: TimerData): void => {
         addTimer(data);
         startBlinking();
@@ -60,16 +40,6 @@ function Home() {
         addTimer(data);
         stopBlinking();
     };
-
-    useEffect(() => {
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === "visible") {
-                stopBlinking();
-            }
-        };
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-    }, []);
 
     return (
         <div>
