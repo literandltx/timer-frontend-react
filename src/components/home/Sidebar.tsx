@@ -35,7 +35,7 @@ function Sidebar({
                 <div className="p-8 flex flex-col h-full">
                     <div
                         className="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
-a                        <h2 className="text-2xl font-bold text-white">Info</h2>
+                        <h2 className="text-2xl font-bold text-white">Info</h2>
                         <button onClick={onClose}
                                 className="text-gray-400 hover:text-white transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -60,7 +60,7 @@ a                        <h2 className="text-2xl font-bold text-white">Info</h2>
                             </li>
                             <li>
                                 <NavLink to="/">
-
+                                    Register
                                 </NavLink>
                             </li>
                             <li>
