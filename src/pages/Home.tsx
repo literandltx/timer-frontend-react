@@ -1,10 +1,8 @@
 import './Home.css';
 import {useState} from "react";
-import {NavLink} from "react-router";
-
 import Timer from "../components/home/Timer.tsx";
-import SettingModal from "../components/home/SettingModal.tsx";
 import LabelSelector from "../components/home/LabelSelector.tsx";
+import Sidebar from "../components/home/Sidebar.tsx";
 import {useLabels} from "../hooks/useLabels";
 import {useTimerSettings} from "../hooks/useTimerSettings";
 import {useTimerHistory} from "../hooks/useTimerHistory";
@@ -14,6 +12,7 @@ import type {TimerData} from "../types/timer.ts";
 const SECONDS_PER_MINUTE = 60;
 
 function Home() {
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [timestamp] = useState<number>((): number => Date.now());
     const {startBlinking, stopBlinking} = useTabNotification("timer");
 
@@ -41,7 +40,39 @@ function Home() {
     };
 
     return (
-        <div>
+        <div
+            className="fixed inset-0 w-screen h-screen bg-[#1a1a1a] text-white overflow-hidden"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <button
+                onClick={() => setSidebarOpen(true)}
+                className="absolute top-6 left-6 z-50 p-2 rounded-full hover:bg-white/10 transition-colors"
+                aria-label="Open Menu"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                     strokeLinejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+                selectedOption={selectedOption}
+                availableOptions={availableOptions}
+                onSelect={savePreference}
+                onAddCustom={addCustomOption}
+                onRemove={removeOption}
+            />
+
             <Timer
                 key={timeAmount}
                 timeAmount={timeAmount}
@@ -57,18 +88,8 @@ function Home() {
                     options={labels}
                 />
             </div>
-            <div className="absolute bottom-[2%] left-[2%] flex items-center gap-2">
-                <NavLink to={"/history"}>History</NavLink>
-                <SettingModal
-                    selectedOption={selectedOption}
-                    availableOptions={availableOptions}
-                    onSelect={savePreference}
-                    onAddCustom={addCustomOption}
-                    onRemove={removeOption}
-                />
-            </div>
         </div>
     );
 }
 
-export default Home
+export default Home;
