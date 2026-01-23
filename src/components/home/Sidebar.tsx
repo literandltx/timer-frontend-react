@@ -35,7 +35,7 @@ function Sidebar({
                 <div className="p-8 flex flex-col h-full">
                     <div
                         className="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
-                        <h2 className="text-2xl font-bold text-white">Focus</h2>
+a                        <h2 className="text-2xl font-bold text-white">Info</h2>
                         <button onClick={onClose}
                                 className="text-gray-400 hover:text-white transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -46,20 +46,24 @@ function Sidebar({
                             </svg>
                         </button>
                     </div>
+                    <nav>
+                        <ul className="flex flex-col gap-6">
+                            <li>
+                                <NavLink to="/history" onClick={onClose}>
+                                    <span className="text-base">History</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/">
+                                    Preferences
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/">
 
-                    <nav className="flex flex-col gap-6">
-                        <NavLink
-                            to="/history"
-                            className="text-lg font-medium text-gray-300 hover:text-white flex items-center gap-3 transition-colors"
-                            onClick={onClose}
-                        >
-                            <span>📅</span> History
-                        </NavLink>
-
-                        <div className="flex flex-col gap-3">
-                            <span
-                                className="text-xs text-gray-500 uppercase tracking-widest font-bold">Preferences</span>
-                            <div className="block">
+                                </NavLink>
+                            </li>
+                            <li>
                                 <SettingModal
                                     selectedOption={selectedOption}
                                     availableOptions={availableOptions}
@@ -67,8 +71,8 @@ function Sidebar({
                                     onAddCustom={onAddCustom}
                                     onRemove={onRemove}
                                 />
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                     </nav>
                 </div>
             </div>

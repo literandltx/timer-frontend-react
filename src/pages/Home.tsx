@@ -41,7 +41,7 @@ function Home() {
 
     return (
         <div
-            className="fixed inset-0 w-screen h-screen bg-[#1a1a1a] text-white overflow-hidden"
+            // className="fixed inset-0 w-screen h-screen bg-[#1a1a1a] text-white overflow-hidden"
             style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -54,7 +54,7 @@ function Home() {
                 className="absolute top-6 left-6 z-50 p-2 rounded-full hover:bg-white/10 transition-colors"
                 aria-label="Open Menu"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="24" viewBox="0 0 24 24"
                      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
                      strokeLinejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>

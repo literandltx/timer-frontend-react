@@ -55,7 +55,9 @@ function History() {
     };
 
     return (
-        <div>
+        <div
+            // className="fixed inset-0 w-screen h-screen bg-[#1a1a1a] text-white overflow-hidden"
+        >
             <NavLink to={"/"} className={"absolute top-[2%] left-[2%]"}>Home</NavLink>
 
             <div className="absolute top-[2%] right-[2%] flex gap-2">
