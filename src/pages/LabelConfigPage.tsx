@@ -1,7 +1,7 @@
 function LabelConfigPage() {
     return (
         <div>
-            Register page
+            Label config page
         </div>
     )
 }

@@ -1,7 +1,7 @@
 function TimerConfigPage() {
     return (
         <div>
-            Register page
+            Timer config page
         </div>
     )
 }

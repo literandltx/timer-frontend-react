@@ -1,7 +1,7 @@
 function NotFoundPage() {
     return (
         <div>
-            Register page
+            404 page not found
         </div>
     )
 }

@@ -1,12 +1,23 @@
-import { Outlet } from "react-router-dom";
+import {useState} from "react";
+import {Outlet} from "react-router-dom";
+import Sidebar from "./navbar/Sidebar.tsx";
+
+export interface MainLayoutContext {
+    setSidebarOpen: (isOpen: boolean) => void;
+}
 
 function MainLayout() {
-    return (
-        <div style={{ display: 'flex', height: '100vh' }}>
-            {/*<Sidebar />*/}
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-            <main style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-                <Outlet />
+    return (
+        <div>
+            <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+            />
+
+            <main>
+                <Outlet context={{setSidebarOpen} satisfies MainLayoutContext}/>
             </main>
         </div>
     );

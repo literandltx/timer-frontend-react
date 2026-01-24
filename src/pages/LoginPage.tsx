@@ -1,7 +1,7 @@
 function LoginPage() {
     return (
         <div>
-            Register page
+            Login page
         </div>
     )
 }
