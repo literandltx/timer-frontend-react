@@ -8,7 +8,7 @@ interface TimerSettingsModalProps {
     onSelect: (option: TimerOption) => void;
 }
 
-function TimerSettingsModal({
+function TimerConfigModal({
                           selectedOption,
                           availableOptions,
                           onSelect,
@@ -75,4 +75,4 @@ function TimerSettingsModal({
     )
 }
 
-export default TimerSettingsModal;
+export default TimerConfigModal;
