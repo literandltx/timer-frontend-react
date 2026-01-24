@@ -7,7 +7,7 @@ import { useTimerSettings } from "../hooks/useTimerSettings";
 import { useTimerHistory } from "../hooks/useTimerHistory";
 import { useTabNotification } from "../hooks/useTabNotification";
 import type { TimerData } from "../types/timer.ts";
-import SettingModal from "../components/home/SettingModal.tsx";
+import TimerSettingsModal from "../components/home/TimerSettingsModal.tsx";
 import {NavLink} from "react-router-dom";
 
 const SECONDS_PER_MINUTE = 60;
@@ -20,8 +20,6 @@ function HomePage() {
         selectedOption,
         availableOptions,
         savePreference,
-        addCustomOption,
-        removeOption
     } = useTimerSettings();
     const {addTimer} = useTimerHistory();
 
@@ -80,12 +78,10 @@ function HomePage() {
             </div>
 
             <div className="absolute bottom-[2%] left-[2%] flex items-center gap-2">
-                <SettingModal
+                <TimerSettingsModal
                     selectedOption={selectedOption}
                     availableOptions={availableOptions}
                     onSelect={savePreference}
-                    onAddCustom={addCustomOption}
-                    onRemove={removeOption}
                 />
             </div>
             <div className="absolute bottom-[2%] right-[2%] flex items-center gap-2">
