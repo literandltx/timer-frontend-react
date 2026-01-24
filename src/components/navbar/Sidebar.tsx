@@ -1,4 +1,4 @@
-import {NavLink} from "react-router-dom"; // Change "react-router" to "react-router-dom" usually
+import {NavLink} from "react-router-dom";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -22,7 +22,11 @@ function Sidebar({isOpen, onClose}: SidebarProps) {
             >
                 <div className="p-8 flex flex-col h-full">
                     <div className="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
-                        <h2 className="text-2xl font-bold text-white">Info</h2>
+                        <h2 className="text-2xl font-bold text-white">
+                            <NavLink to="/" onClick={onClose}>
+                                Timer
+                            </NavLink>
+                        </h2>
                         <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                  viewBox="0 0 24 24" fill="none" stroke="currentColor"

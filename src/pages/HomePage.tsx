@@ -8,6 +8,7 @@ import { useTimerHistory } from "../hooks/useTimerHistory";
 import { useTabNotification } from "../hooks/useTabNotification";
 import type { TimerData } from "../types/timer.ts";
 import SettingModal from "../components/home/SettingModal.tsx";
+import {NavLink} from "react-router-dom";
 
 const SECONDS_PER_MINUTE = 60;
 
@@ -48,7 +49,6 @@ function HomePage() {
                 justifyContent: 'center'
             }}
         >
-
             <Timer
                 key={timeAmount}
                 timeAmount={timeAmount}
@@ -57,6 +57,27 @@ function HomePage() {
                 onFinish={handleTimerFinish}
                 onReset={handleTimerReset}
             />
+            <div className="absolute top-6 right-6">
+                <NavLink
+                    to="/history"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-black/20 hover:bg-black/30 text-white rounded-lg shadow-md transition-all duration-200"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                    </svg>
+                </NavLink>
+            </div>
 
             <div className="absolute bottom-[2%] left-[2%] flex items-center gap-2">
                 <SettingModal
