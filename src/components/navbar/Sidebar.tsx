@@ -1,5 +1,5 @@
 import {NavLink} from "react-router";
-import SettingModal from "./SettingModal.tsx";
+import SettingModal from "../home/SettingModal.tsx";
 import type {TimerOption} from "../../types/settings.ts";
 
 interface SidebarProps {

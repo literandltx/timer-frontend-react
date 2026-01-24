@@ -9,7 +9,7 @@ import {useLabels} from "../hooks/useLabels.ts";
 import {exportHistoryToCSV, parseHistoryFromCSV} from "../utils/csvUtils";
 import type {TimerData} from "../types/timer.ts";
 
-function History() {
+function HistoryPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const {
@@ -92,5 +92,5 @@ function History() {
     );
 }
 
-export default History
+export default HistoryPage;
 

@@ -2,7 +2,7 @@ import './Home.css';
 import {useState} from "react";
 import Timer from "../components/home/Timer.tsx";
 import LabelSelector from "../components/home/LabelSelector.tsx";
-import Sidebar from "../components/home/Sidebar.tsx";
+import Sidebar from "../components/navbar/Sidebar.tsx";
 import {useLabels} from "../hooks/useLabels";
 import {useTimerSettings} from "../hooks/useTimerSettings";
 import {useTimerHistory} from "../hooks/useTimerHistory";
@@ -11,7 +11,7 @@ import type {TimerData} from "../types/timer.ts";
 
 const SECONDS_PER_MINUTE = 60;
 
-function Home() {
+function HomePage() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [timestamp] = useState<number>((): number => Date.now());
     const {startBlinking, stopBlinking} = useTabNotification("timer");
@@ -92,4 +92,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default HomePage;
