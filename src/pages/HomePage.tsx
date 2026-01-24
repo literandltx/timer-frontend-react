@@ -1,20 +1,17 @@
 import './Home.css';
-import {useState} from "react";
-import {useOutletContext} from "react-router-dom"; // Import this
+import { useState } from "react";
 import Timer from "../components/home/Timer.tsx";
 import LabelSelector from "../components/home/LabelSelector.tsx";
-import {useLabels} from "../hooks/useLabels";
-import {useTimerSettings} from "../hooks/useTimerSettings";
-import {useTimerHistory} from "../hooks/useTimerHistory";
-import {useTabNotification} from "../hooks/useTabNotification";
-import type {TimerData} from "../types/timer.ts";
+import { useLabels } from "../hooks/useLabels";
+import { useTimerSettings } from "../hooks/useTimerSettings";
+import { useTimerHistory } from "../hooks/useTimerHistory";
+import { useTabNotification } from "../hooks/useTabNotification";
+import type { TimerData } from "../types/timer.ts";
 import SettingModal from "../components/home/SettingModal.tsx";
-import type {MainLayoutContext} from "../components/MainLayout.tsx";
 
 const SECONDS_PER_MINUTE = 60;
 
 function HomePage() {
-    const {setSidebarOpen} = useOutletContext<MainLayoutContext>();
     const [timestamp] = useState<number>((): number => Date.now());
     const {startBlinking, stopBlinking} = useTabNotification("timer");
 
@@ -51,19 +48,6 @@ function HomePage() {
                 justifyContent: 'center'
             }}
         >
-            <button
-                onClick={() => setSidebarOpen(true)}
-                className="absolute top-6 left-6 z-50 p-2 rounded-full hover:bg-white/10 transition-colors"
-                aria-label="Open Menu"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="24" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                     strokeLinejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
 
             <Timer
                 key={timeAmount}
