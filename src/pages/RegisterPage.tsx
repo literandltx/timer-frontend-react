@@ -49,7 +49,7 @@ function RegisterPage() {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -98,19 +98,19 @@ function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-            <div className="w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl p-8">
-
+        <div className="flex items-center justify-center h-screen">
+            {/*<div className="w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl p-8">*/}
+            <div>
                 <div className="mb-8 text-center">
-                    <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">
+                    <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-100 to-cyan-300">
                         Create Account
                     </h2>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-300 block ml-1">
-                            Email Address
+                            Email
                         </label>
                         <div className="relative group">
                             <div
@@ -121,7 +121,7 @@ function RegisterPage() {
                             <input
                                 type="email"
                                 name="email"
-                                className="w-full bg-slate-800/50 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 p-3 placeholder-slate-500 transition-all outline-none"
+                                className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 p-3 placeholder-slate-500 transition-all outline-none"
                                 placeholder="name@example.com"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -143,7 +143,7 @@ function RegisterPage() {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
-                                className="w-full bg-slate-800/50 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
+                                className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
                                 placeholder="••••••••"
                                 value={formData.password}
                                 onChange={handleChange}
@@ -154,7 +154,7 @@ function RegisterPage() {
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-300 block ml-1">
-                            Repeat Password
+                            Confirm Password
                         </label>
                         <div className="relative group">
                             <div
@@ -165,7 +165,7 @@ function RegisterPage() {
                             <input
                                 type={showRepeatPassword ? "text" : "password"}
                                 name="repeatPassword"
-                                className="w-full bg-slate-800/50 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
+                                className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
                                 placeholder="••••••••"
                                 value={formData.repeatPassword}
                                 onChange={handleChange}
@@ -177,7 +177,7 @@ function RegisterPage() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full flex justify-center items-center bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        className="w-full flex justify-center items-center bg-gradient-to-r from-[#242424]/70 to-[#242424]/70 font-semibold py-3 px-4 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
                         {isLoading ? (
                             <>
