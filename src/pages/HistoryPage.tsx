@@ -1,5 +1,4 @@
 import {useRef} from "react";
-import {NavLink} from "react-router";
 
 import HistoryList from "../components/history/HistoryList.tsx";
 import HistoryChart from "../components/history/HistoryChart.tsx";
@@ -58,8 +57,6 @@ function HistoryPage() {
         <div
             // className="fixed inset-0 w-screen h-screen bg-[#1a1a1a] text-white overflow-hidden"
         >
-            <NavLink to={"/"} className={"absolute top-[2%] left-[2%]"}>Home</NavLink>
-
             <div className="absolute top-[2%] right-[2%] flex gap-2">
                 <input
                     type="file"
