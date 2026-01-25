@@ -45,13 +45,6 @@ function Sidebar({isOpen, onClose}: SidebarProps) {
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink to="/data" onClick={onClose}>
-                                    Import / Export
-                                </NavLink>
-                            </li>
-
-                            {/* Settings routes */}
-                            <li>
                                 <NavLink to="/settings/labels" onClick={onClose}>
                                     Labels
                                 </NavLink>
@@ -62,11 +55,14 @@ function Sidebar({isOpen, onClose}: SidebarProps) {
                                     Timers
                                 </NavLink>
                             </li>
-
-                            {/* Auth routes */}
                             <li>
                                 <NavLink to="auth/register" onClick={onClose}>
                                     Register / Login
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/data" onClick={onClose}>
+                                    Import / Export
                                 </NavLink>
                             </li>
                         </ul>
