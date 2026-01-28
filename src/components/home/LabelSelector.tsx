@@ -1,25 +1,25 @@
 import { Select } from '@headlessui/react'
-import {LABEL_ACTIONS} from "../../types/labels.ts";
+import { type Label, LABEL_ACTIONS } from "../../types/labels";
 
 interface LabelSelectorProps {
-    value: string;
+    value: Label | undefined;
+    options: Label[];
     onChange: (value: string) => void;
-    options: string[];
 }
 
-function LabelSelector({value, onChange, options}: LabelSelectorProps) {
+function LabelSelector({ value, onChange, options }: LabelSelectorProps) {
     return (
         <div>
             <Select
                 name="status"
-                value={value}
+                value={value?.id || ''}
                 onChange={(e) => onChange(e.target.value)}
                 aria-label="Label"
-                className="rounded-md bg-black/15 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
+                className="appearance-none block w-full rounded-md bg-black/15 px-4 py-2 text-sm font-medium text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-black/30"
             >
                 {options.map((opt) => (
-                    <option key={opt} value={opt}>
-                        {opt}
+                    <option key={opt.id} value={opt.id}>
+                        {opt.name}
                     </option>
                 ))}
 
@@ -31,10 +31,14 @@ function LabelSelector({value, onChange, options}: LabelSelectorProps) {
 
                 {value && (
                     <option value={LABEL_ACTIONS.DELETE_CURRENT}>
-                        Delete: {value}
+                        Delete: {value.name}
                     </option>
                 )}
             </Select>
+
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                 <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            </span>
         </div>
     )
 }

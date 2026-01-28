@@ -1,27 +1,17 @@
 import {useRef} from "react";
-import {NavLink} from "react-router";
 
-import HistoryList from "../components/history/HistoryList.tsx";
-import HistoryChart from "../components/history/HistoryChart.tsx";
-import {useTimerHistory} from "../hooks/useTimerHistory";
-import {useLabels} from "../hooks/useLabels.ts";
+import {useTimerHistory} from "../hooks/useTimerHistory.ts";
+import {exportHistoryToCSV, parseHistoryFromCSV} from "../utils/csvUtils.ts";
 
-import {exportHistoryToCSV, parseHistoryFromCSV} from "../utils/csvUtils";
 import type {TimerData} from "../types/timer.ts";
 
-function History() {
+function ImportExportPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const {
         history,
-        clearHistory,
-        clearToday,
-        removeEntry,
-        updateEntry,
-        addManualEntry,
         importHistory
     } = useTimerHistory();
-    const {labels} = useLabels();
 
     const exportToCSV = () => {
         exportHistoryToCSV(history);
@@ -56,9 +46,7 @@ function History() {
 
     return (
         <div>
-            <NavLink to={"/"} className={"absolute top-[2%] left-[2%]"}>Home</NavLink>
-
-            <div className="absolute top-[2%] right-[2%] flex gap-2">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 flex gap-2">
                 <input
                     type="file"
                     accept=".csv"
@@ -72,23 +60,8 @@ function History() {
                     <button onClick={exportToCSV}>Export CSV</button>
                 </div>
             </div>
-
-            <h1 className="text-2xl font-bold text-center mt-8 mb-0">History Chart</h1>
-            <div className="flex flex-col gap-2">
-                <HistoryChart data={history}/>
-                <HistoryList
-                    history={history}
-                    availableLabels={labels}
-                    onClearAll={clearHistory}
-                    onClearToday={clearToday}
-                    onAddEntry={addManualEntry}
-                    onDeleteEntry={removeEntry}
-                    onEditEntry={updateEntry}
-                />
-            </div>
         </div>
-    );
+    )
 }
 
-export default History
-
+export default ImportExportPage;

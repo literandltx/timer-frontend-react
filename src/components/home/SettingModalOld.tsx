@@ -45,7 +45,7 @@ function SettingModal({
                 onClick={() => setIsOpen(true)}
                 className="rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 transition-colors"
             >
-                Settings
+                Timer Settings
             </Button>
 
             <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none"

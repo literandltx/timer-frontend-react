@@ -3,10 +3,11 @@ import styles from './Timer.module.css';
 
 import {formatTime} from '../../utils/timeUtils';
 import type {TimerData} from "../../types/timer.ts";
+import type {Label} from "../../types/labels.ts";
 
 type CountdownTimerProps = {
     timeAmount: number;
-    label: string;
+    label: Label;
     timestamp: number;
 
     onFinish: (data: TimerData) => void;
