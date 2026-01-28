@@ -21,10 +21,13 @@ function HomePage() {
         availableOptions,
         savePreference,
     } = useTimerSettings();
+    const {
+        labels,
+        activeLabel,
+        handleLabelChange
+    } = useLabels();
     const {addTimer} = useTimerHistory();
-
     const timeAmount: number = selectedOption.value * SECONDS_PER_MINUTE;
-    const {labels, activeLabel, handleLabelChange} = useLabels();
 
     const handleTimerFinish = (data: TimerData): void => {
         addTimer(data);

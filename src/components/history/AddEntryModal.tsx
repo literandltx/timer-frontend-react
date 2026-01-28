@@ -1,15 +1,17 @@
 import {Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle} from '@headlessui/react';
 import {type FormEvent, useState} from 'react';
+import type {Label} from "../../types/labels";
 
 interface AddEntryModalProps {
-    availableLabels: string[];
-    onSave: (label: string, durationMinutes: number, timestamp: number) => void;
+    availableLabels: Label[];
+    onSave: (label: Label, durationMinutes: number, timestamp: number) => void;
 }
 
 export default function AddEntryModal({availableLabels, onSave}: AddEntryModalProps) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const [label, setLabel] = useState(availableLabels[0] || 'Focus');
+    const [selectedLabelId, setSelectedLabelId] = useState<string>(availableLabels[0]?.id || '');
+    const activeLabel: Label = availableLabels.find(l => l.id === selectedLabelId) || availableLabels[0];
     const [duration, setDuration] = useState('25');
     const [date, setDate] = useState(() => {
         const now = new Date();
@@ -19,6 +21,9 @@ export default function AddEntryModal({availableLabels, onSave}: AddEntryModalPr
 
     function open() {
         setIsOpen(true);
+        if (availableLabels.length > 0) {
+            setSelectedLabelId(availableLabels[0].id);
+        }
     }
 
     function close() {
@@ -30,12 +35,17 @@ export default function AddEntryModal({availableLabels, onSave}: AddEntryModalPr
         const durationNum = parseFloat(duration);
         const timestamp = new Date(date).getTime();
 
+        if (!activeLabel) {
+            alert("No label selected");
+            return;
+        }
+
         if (isNaN(durationNum) || durationNum <= 0 || isNaN(timestamp)) {
             alert("Please enter valid duration and date");
             return;
         }
 
-        onSave(label, durationNum, timestamp);
+        onSave(activeLabel, durationNum, timestamp);
 
         close();
         setDuration('25');
@@ -50,13 +60,12 @@ export default function AddEntryModal({availableLabels, onSave}: AddEntryModalPr
                 Add Entry
             </Button>
 
-            <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={close} __demoMode>
+            <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={close}>
                 <DialogBackdrop
                     transition
-                    className="fixed inset-0 bg-black/20 backdrop-blur-sm duration-0 ease-out data-[closed]:opacity-0"
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm duration-200 ease-out data-[closed]:opacity-0"
                 />
                 <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
-
                     <div className="flex min-h-full items-center justify-center p-4">
                         <DialogPanel
                             transition
@@ -71,20 +80,19 @@ export default function AddEntryModal({availableLabels, onSave}: AddEntryModalPr
                                     <label className="text-sm font-medium text-white/70">Label</label>
                                     <div className="relative">
                                         <select
-                                            value={label}
-                                            onChange={(e) => setLabel(e.target.value)}
+                                            value={activeLabel?.id || ''}
+                                            onChange={(e) => setSelectedLabelId(e.target.value)}
                                             className="block w-full appearance-none rounded-lg border-none bg-white/5 py-2.5 px-3 text-sm/6 text-white focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
                                         >
                                             {availableLabels.map(lbl => (
-                                                <option key={lbl} value={lbl} className="bg-[#2a2a2a] text-white">
-                                                    {lbl}
+                                                <option key={lbl.id} value={lbl.id}>
+                                                    {lbl.name}
                                                 </option>
                                             ))}
                                         </select>
                                         <div
                                             className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white/50">
-                                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                 viewBox="0 0 20 20">
+                                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                                 <path
                                                     d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                                             </svg>
@@ -93,10 +101,12 @@ export default function AddEntryModal({availableLabels, onSave}: AddEntryModalPr
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium text-white/70">Duration (Minutes)</label>
+                                    <label className="text-sm font-medium text-white/70">Duration
+                                        (Minutes)</label>
                                     <input
                                         type="number"
-                                        step="0.1"
+                                        step="1"
+                                        min="1"
                                         value={duration}
                                         onChange={(e) => setDuration(e.target.value)}
                                         className="block w-full rounded-lg border-none bg-white/5 py-2.5 px-3 text-sm/6 text-white focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
@@ -104,7 +114,8 @@ export default function AddEntryModal({availableLabels, onSave}: AddEntryModalPr
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium text-white/70">Date & Time</label>
+                                    <label className="text-sm font-medium text-white/70">Date &
+                                        Time</label>
                                     <input
                                         type="datetime-local"
                                         value={date}
