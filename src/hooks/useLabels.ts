@@ -1,39 +1,59 @@
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import {useLocalStorage} from "./useLocalStorage";
-import {LABEL_ACTIONS} from "../types/labels.ts";
+import {LABEL_ACTIONS, type Label} from "../types/labels";
 
 export const LOCAL_STORAGE_KEY_LABEL_OPTIONS = 'timer_label_options';
-export const LOCAL_STORAGE_KEY_ACTIVE = 'timer_active_label';
+export const LOCAL_STORAGE_KEY_ACTIVE_ID = 'timer_active_label_id'; // Renamed to reflect it stores ID
 
 interface UseLabelsReturn {
-    labels: string[];
-    activeLabel: string;
+    labels: Label[];
+    activeLabel: Label;
     handleLabelChange: (selectedValue: string) => void;
 }
 
-export function useLabels(initialDefaults: string[] = ['Focus', 'Learn', 'Recharge']): UseLabelsReturn {
-    const [labels, setLabels] = useLocalStorage<string[]>(
+const createLabel = (name: string): Label => ({
+    id: crypto.randomUUID(),
+    name
+});
+
+const DEFAULT_LABELS: Label[] = [
+    createLabel('Focus'),
+    createLabel('Learn'),
+    createLabel('Recharge')
+];
+
+export function useLabels(initialDefaults: Label[] = DEFAULT_LABELS): UseLabelsReturn {
+    const [labels, setLabels] = useLocalStorage<Label[]>(
         LOCAL_STORAGE_KEY_LABEL_OPTIONS,
         initialDefaults
     );
 
-    const [activeLabel, setActiveLabel] = useLocalStorage<string>(
-        LOCAL_STORAGE_KEY_ACTIVE,
-        initialDefaults[0]
+    const [activeLabelId, setActiveLabelId] = useLocalStorage<string>(
+        LOCAL_STORAGE_KEY_ACTIVE_ID,
+        initialDefaults.length > 0 ? initialDefaults[0].id : ''
     );
 
+    const activeLabel = useMemo(() => {
+        return labels.find(l => l.id === activeLabelId) || labels[0];
+    }, [labels, activeLabelId]);
+
     useEffect(() => {
-        if (!labels.includes(activeLabel) && labels.length > 0) {
-            setActiveLabel(labels[0]);
+        if (labels.length > 0) {
+            const isValidId = labels.some(l => l.id === activeLabelId);
+            if (!isValidId) {
+                setActiveLabelId(labels[0].id);
+            }
         }
-    }, [labels, activeLabel, setActiveLabel]);
+    }, [labels, activeLabelId, setActiveLabelId]);
 
     const handleLabelChange = (selectedValue: string): void => {
         if (selectedValue === LABEL_ACTIONS.ADD_NEW) {
-            const newLabel = window.prompt("Enter a new label name:", "Label");
-            if (newLabel && newLabel.trim() !== "") {
+            const newName = window.prompt("Enter a new label name:", "New Label");
+
+            if (newName && newName.trim() !== "") {
+                const newLabel = createLabel(newName.trim());
                 setLabels((prev) => [...prev, newLabel]);
-                setActiveLabel(newLabel);
+                setActiveLabelId(newLabel.id);
             }
             return;
         }
@@ -41,16 +61,21 @@ export function useLabels(initialDefaults: string[] = ['Focus', 'Learn', 'Rechar
         if (selectedValue === LABEL_ACTIONS.DELETE_CURRENT) {
             if (!activeLabel) return;
 
-            const confirmDelete: boolean = window.confirm(`Are you sure you want to delete "${activeLabel}"?`);
+            const confirmDelete = window.confirm(`Are you sure you want to delete "${activeLabel.name}"?`);
+
             if (confirmDelete) {
-                const newLabels: string[] = labels.filter((opt) => opt !== activeLabel);
+                const newLabels = labels.filter((l) => l.id !== activeLabelId);
                 setLabels(newLabels);
-                setActiveLabel(newLabels.length > 0 ? newLabels[0] : "");
+                if (newLabels.length > 0) {
+                    setActiveLabelId(newLabels[0].id);
+                } else {
+                    setActiveLabelId("");
+                }
             }
             return;
         }
 
-        setActiveLabel(selectedValue);
+        setActiveLabelId(selectedValue);
     };
 
     return {

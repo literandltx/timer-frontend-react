@@ -1,5 +1,7 @@
+import type {Label} from "./labels.ts";
+
 export type TimerData = {
-    label: string;
+    label: Label;
     timeAmount: number;
     timestamp: number;
 };
