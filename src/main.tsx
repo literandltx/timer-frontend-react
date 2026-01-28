@@ -4,9 +4,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import {
     HomePage,
+    LoginPage,
     HistoryPage,
     RegisterPage,
-    LoginPage,
+    ImportExportPage,
     LabelConfigPage,
     TimerConfigPage,
     NotFoundPage
@@ -22,7 +23,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/history" element={<HistoryPage/>}/>
-                    {/*<Route path="/data" element={<ImportExportPage/>}/>*/}
+                    <Route path="/data" element={<ImportExportPage/>}/>
 
                     <Route path="/settings">
                         <Route path="labels" element={<LabelConfigPage/>}/>
