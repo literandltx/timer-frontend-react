@@ -1,4 +1,5 @@
-import type {TimerData} from "../types/timer.ts";
+import type {TimerData} from "../types/timer";
+import type {Label} from "../types/labels";
 
 export const exportHistoryToCSV = (history: TimerData[]): void => {
     if (history.length === 0) {
@@ -9,7 +10,7 @@ export const exportHistoryToCSV = (history: TimerData[]): void => {
     const headers: string[] = ["Label", "Time Amount (s)", "Timestamp (Raw)", "Date Formatted"];
 
     const rows: string[] = history.map(timer => {
-        const safeLabel = `"${timer.label.replace(/"/g, '""')}"`;
+        const safeLabel = `"${timer.label.name.replace(/"/g, '""')}"`;
         const dateStr = `"${new Date(timer.timestamp).toLocaleString()}"`;
         return [safeLabel, timer.timeAmount, timer.timestamp, dateStr].join(",");
     });
@@ -49,16 +50,25 @@ export const parseHistoryFromCSV = (file: File): Promise<TimerData[]> => {
                 const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
 
                 if (parts.length >= 3) {
-                    let label = parts[0].trim();
-                    if (label.startsWith('"') && label.endsWith('"')) {
-                        label = label.slice(1, -1).replace(/""/g, '"');
+                    let labelName = parts[0].trim();
+                    if (labelName.startsWith('"') && labelName.endsWith('"')) {
+                        labelName = labelName.slice(1, -1).replace(/""/g, '"');
                     }
 
                     const timeAmount = parseInt(parts[1], 10);
                     const timestamp = parseInt(parts[2], 10);
 
                     if (!isNaN(timeAmount) && !isNaN(timestamp)) {
-                        newTimers.push({label, timeAmount, timestamp});
+                        const newLabel: Label = {
+                            id: `import-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+                            name: labelName
+                        };
+
+                        newTimers.push({
+                            label: newLabel,
+                            timeAmount,
+                            timestamp
+                        });
                     }
                 }
             }

@@ -1,5 +1,6 @@
 import {useState, useEffect, useCallback} from "react";
 import type {TimerData} from "../types/timer.ts";
+import type {Label} from "../types/labels.ts";
 
 const LOCAL_STORAGE_KEY_HISTORY = 'timerHistory';
 
@@ -25,7 +26,7 @@ export function useTimerHistory() {
         setHistory((prev) => [...prev, timer]);
     }, []);
 
-    const addManualEntry = useCallback((label: string, durationMinutes: number, timestamp: number) => {
+    const addManualEntry = useCallback((label: Label, durationMinutes: number, timestamp: number) => {
         const newEntry: TimerData = {
             label: label,
             timeAmount: durationMinutes * 60,
@@ -41,7 +42,7 @@ export function useTimerHistory() {
         setHistory(prev => prev.filter((_, index) => index !== indexToDelete));
     }, []);
 
-    const updateEntry = useCallback((index: number, newTimeInSeconds: number, newLabel: string, newTimestamp: number) => {
+    const updateEntry = useCallback((index: number, newTimeInSeconds: number, newLabel: Label, newTimestamp: number) => {
         setHistory(prev => {
             const copy = [...prev];
             copy[index] = {

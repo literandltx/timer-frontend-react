@@ -48,7 +48,10 @@ export function useTimerSettings() {
         const newOption: TimerOption = {
             id: Date.now(),
             value: minutes,
-            label: `${minutes} Min`
+            label: {
+                id: `custom-${Date.now()}`,
+                name: `${minutes} Min`
+            }
         };
 
         const updatedOptions = [...activeSettings.options, newOption]
