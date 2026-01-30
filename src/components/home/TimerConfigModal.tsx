@@ -36,14 +36,14 @@ function TimerConfigModal({
                     onClose={() => setIsOpen(false)}>
                 <DialogBackdrop
                     transition
-                    className="fixed inset-0 bg-black/20 backdrop-blur-sm duration-300 ease-out data-[closed]:opacity-0"
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm duration-75 ease-out data-[closed]:opacity-0"
                 />
 
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-4">
                         <DialogPanel
                             transition
-                            className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+                            className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl duration-75 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
                         >
                             <DialogTitle as="div" className="flex justify-between items-center mb-6">
                                 <h3 className="text-lg font-medium text-white">
