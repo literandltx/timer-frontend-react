@@ -1,7 +1,6 @@
 import './Home.css';
 import { useState } from "react";
 import Timer from "../components/home/Timer.tsx";
-import LabelSelector from "../components/home/LabelSelector.tsx";
 import { useLabels } from "../hooks/useLabels";
 import { useTimerSettings } from "../hooks/useTimerSettings";
 import { useTimerHistory } from "../hooks/useTimerHistory";
@@ -9,6 +8,7 @@ import { useTabNotification } from "../hooks/useTabNotification";
 import type { TimerData } from "../types/timer.ts";
 import TimerConfigModal from "../components/home/TimerConfigModal.tsx";
 import {NavLink} from "react-router-dom";
+import LabelConfigModal from "../components/home/LabelConfigModal.tsx";
 
 const SECONDS_PER_MINUTE = 60;
 
@@ -88,10 +88,10 @@ function HomePage() {
                 />
             </div>
             <div className="absolute bottom-[2%] right-[2%] flex items-center gap-2">
-                <LabelSelector
-                    value={activeLabel}
-                    onChange={handleLabelChange}
-                    options={labels}
+                <LabelConfigModal
+                    selectedLabel={activeLabel}
+                    onSelect={handleLabelChange}
+                    labels={labels}
                 />
             </div>
         </div>
