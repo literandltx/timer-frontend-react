@@ -13,7 +13,6 @@ export const exportHistoryToCSV = (history: TimerData[]): void => {
         const safeLabel: string = `"${timer.label.name.replace(/"/g, '""')}"`;
         const color: string = timer.label.color || "#6b7280";
         const dateStr: string = `"${new Date(timer.timestamp).toLocaleString()}"`;
-        console.log(safeLabel, color, timer.timeAmount, timer.timestamp, dateStr)
 
         return [safeLabel, color, timer.timeAmount, timer.timestamp, dateStr].join(",");
     });
@@ -82,7 +81,6 @@ export const parseHistoryFromCSV = (file: File): Promise<TimerData[]> => {
                             color: color,
                         };
 
-                        console.log(labelName, color, timeAmount, timestamp, new Date(timestamp).toLocaleString())
                         newTimers.push({
                             label: newLabel,
                             timeAmount,

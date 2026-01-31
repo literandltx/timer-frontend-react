@@ -17,6 +17,25 @@ const PREDEFINED_COLORS = [
     "#ec4899", // Pink
 ];
 
+const ColorPicker = ({ selectedColor, onSelect }: { selectedColor: string, onSelect: (c: string) => void }) => (
+    <div className="flex gap-2 flex-wrap mt-2">
+        {PREDEFINED_COLORS.map((color) => (
+            <button
+                key={color}
+                onClick={() => onSelect(color)}
+                className={`w-6 h-6 rounded-full border-2 transition-all ${
+                    selectedColor === color
+                        ? "border-white scale-110"
+                        : "border-transparent hover:scale-105"
+                }`}
+                style={{ backgroundColor: color }}
+                title={color}
+                type="button"
+            />
+        ))}
+    </div>
+);
+
 function LabelConfigPage() {
     const [labels, setLabels] = useLocalStorage<Label[]>(LOCAL_STORAGE_KEY_LABEL_OPTIONS, []);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -71,24 +90,6 @@ function LabelConfigPage() {
         setEditColor(PREDEFINED_COLORS[0]);
     };
 
-    const ColorPicker = ({ selectedColor, onSelect }: { selectedColor: string, onSelect: (c: string) => void }) => (
-        <div className="flex gap-2 flex-wrap mt-2">
-            {PREDEFINED_COLORS.map((color) => (
-                <button
-                    key={color}
-                    onClick={() => onSelect(color)}
-                    className={`w-6 h-6 rounded-full border-2 transition-all ${
-                        selectedColor === color
-                            ? "border-white scale-110"
-                            : "border-transparent hover:scale-105"
-                    }`}
-                    style={{ backgroundColor: color }}
-                    title={color}
-                />
-            ))}
-        </div>
-    );
-
     return (
         <div className="flex flex-col items-center gap-6 p-4 w-full text-white">
             <h2 className="text-xl font-bold">Label Configuration</h2>
@@ -138,7 +139,7 @@ function LabelConfigPage() {
                                         type="text"
                                         value={editName}
                                         onChange={(e) => setEditName(e.target.value)}
-                                        className="w-full px-2 py-1 text-sm text-white bg-neutral-900 rounded border border-sky-500 focus:outline-none"
+                                        className="w-full px-2 py-1 text-sm bg-neutral-900 rounded border border-sky-500 focus:outline-none"
                                         autoFocus
                                         onKeyDown={(e) => {
                                             if (e.key === "Enter") handleSaveEdit(label.id);
@@ -153,7 +154,7 @@ function LabelConfigPage() {
                                         className="w-4 h-4 rounded-full shadow-sm"
                                         style={{ backgroundColor: label.color || PREDEFINED_COLORS[0] }}
                                     />
-                                    <span className="font-bold text-lg text-white">
+                                    <span className="font-bold text-lg">
                                         {label.name}
                                     </span>
                                 </div>
