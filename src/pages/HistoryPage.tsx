@@ -2,6 +2,7 @@ import HistoryList from "../components/history/HistoryList.tsx";
 import HistoryChart from "../components/history/HistoryChart.tsx";
 import {useTimerHistory} from "../hooks/useTimerHistory";
 import {useLabels} from "../hooks/useLabels.ts";
+import DistributionChart from "../components/history/DistributionChart.tsx";
 
 function HistoryPage() {
     const {
@@ -19,6 +20,7 @@ function HistoryPage() {
             <h1 className="text-2xl font-bold text-center mt-8 mb-0">History Chart</h1>
             <div className="flex flex-col gap-2">
                 <HistoryChart data={history}/>
+                <DistributionChart data={history}/>
                 <HistoryList
                     history={history}
                     availableLabels={labels}
