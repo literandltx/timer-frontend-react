@@ -24,8 +24,15 @@ function LabelConfigModal({
         <>
             <Button
                 onClick={() => setIsOpen(true)}
-                className="rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 transition-colors"
+                title={selectedLabel ? `Selected: ${selectedLabel.name}` : "Select Label"}
+                className="rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 transition-colors flex items-center gap-2"
             >
+                {selectedLabel && (
+                    <span
+                        className="w-2 h-2 rounded-full shadow-sm"
+                        style={{backgroundColor: selectedLabel.color || '#fff'}}
+                    />
+                )}
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                      strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                     <path strokeLinecap="round" strokeLinejoin="round"
@@ -49,27 +56,37 @@ function LabelConfigModal({
                         >
                             <DialogTitle as="div"
                                          className="flex justify-between items-center mb-6">
-                                <h3 className="text-lg font-medium text-white">
+                                <h3 className="text-lg font-bold text-white">
                                     Select Label
                                 </h3>
                             </DialogTitle>
 
                             <div>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {labels.map((label) => (
-                                        <div key={label.id} className="relative group">
-                                            <Button
-                                                onClick={() => handleSelect(label)}
-                                                className={`
-                                                    w-full rounded-lg px-2 py-2 text-sm font-semibold shadow-inner shadow-white/10 focus:outline-none transition-all truncate
-                                                    ${selectedLabel?.id === label.id
-                                                    ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
-                                                }`}
-                                            >
-                                                {label.name}
-                                            </Button>
-                                        </div>
-                                    ))}
+                                    {labels.map((label) => {
+                                        const isSelected = selectedLabel?.id === label.id;
+                                        return (
+                                            <div key={label.id} className="relative group">
+                                                <Button
+                                                    onClick={() => handleSelect(label)}
+                                                    className={`
+                                                        w-full rounded-lg px-3 py-2 text-sm font-medium transition-all
+                                                        flex items-center gap-3 justify-start border
+                                                        ${isSelected
+                                                        ? 'bg-white/10 border-white/30 text-white'
+                                                        : 'bg-transparent border-neutral-800 text-neutral-400 hover:bg-white/5 hover:text-neutral-200'
+                                                    }`}
+                                                >
+                                                    <span
+                                                        className={`w-3 h-3 rounded-full flex-shrink-0 ${isSelected ? 'ring-2 ring-white/20' : ''}`}
+                                                        style={{backgroundColor: label.color || '#6b7280'}}
+                                                    />
+
+                                                    <span className="truncate">{label.name}</span>
+                                                </Button>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </DialogPanel>

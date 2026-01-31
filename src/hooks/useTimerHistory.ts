@@ -73,9 +73,19 @@ export function useTimerHistory() {
     const importHistory = useCallback((newTimers: TimerData[]) => {
         setHistory(prev => {
             const combined = [...prev, ...newTimers];
-            const unique = combined.filter((item, index, self) =>
-                index === self.findIndex((t) => t.timestamp === item.timestamp)
-            );
+
+            const seen = new Set();
+            const unique: TimerData[] = [];
+
+            for (const item of combined) {
+                const signature = `${item.timestamp}-${item.label.name}-${item.timeAmount}`;
+
+                if (!seen.has(signature)) {
+                    seen.add(signature);
+                    unique.push(item);
+                }
+            }
+
             return unique.sort((a, b) => b.timestamp - a.timestamp);
         });
     }, []);

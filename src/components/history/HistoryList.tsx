@@ -1,8 +1,8 @@
 import {useState} from "react";
 import AddEntryModal from "./AddEntryModal.tsx";
-import EditableListItem from "../common/EditableListItem";
 import type {TimerData} from "../../types/timer.ts";
 import type {Label} from "../../types/labels.ts";
+import EditableListItem from "../common/EditableListItem.tsx";
 
 type HistoryListProps = {
     history: TimerData[];
@@ -54,17 +54,14 @@ export default function HistoryList({
     const handleSaveEdit = (index: number) => {
         const minutes = parseFloat(editValue);
         const newTimestamp = new Date(editDate).getTime();
-
         const selectedLabelObj = availableLabels.find(l => l.id === editLabelId);
 
         if (!isNaN(minutes) && minutes >= 0 && !isNaN(newTimestamp) && selectedLabelObj) {
             onEditEntry(index, Math.round(minutes * 60), selectedLabelObj, newTimestamp);
+            handleCancelEdit();
         } else if (!selectedLabelObj) {
             alert("Please select a valid label.");
-            return;
         }
-
-        handleCancelEdit();
     };
 
     const handleCancelEdit = () => {
@@ -83,14 +80,20 @@ export default function HistoryList({
                     availableLabels={availableLabels}
                     onSave={onAddEntry}
                 />
-                <button onClick={onClearToday}>Clear Today</button>
-                <button onClick={onClearAll}>Clear All</button>
+                <button onClick={onClearToday}
+                        className="text-sm text-white/70 hover:text-white">Clear Today
+                </button>
+                <button onClick={onClearAll}
+                        className="text-sm text-red-400 hover:text-red-300">Clear All
+                </button>
             </div>
 
             <ul className="w-full max-w-2xl space-y-2">
                 {sortedHistory.map((item) => {
                     const {originalIndex, ...data} = item;
                     const isEditing: boolean = editingIndex === originalIndex;
+
+                    const currentEditLabelColor = availableLabels.find(l => l.id === editLabelId)?.color || '#555';
 
                     return (
                         <EditableListItem
@@ -101,7 +104,7 @@ export default function HistoryList({
                             onSave={() => handleSaveEdit(originalIndex)}
                             onCancel={handleCancelEdit}
                         >
-                            <div className="flex justify-between items-center w-full">
+                            <div className="flex justify-between items-center w-full pr-4">
                                 <div className="flex flex-col">
                                     {isEditing ? (
                                         <div className="flex items-center gap-2 mt-1">
@@ -109,7 +112,7 @@ export default function HistoryList({
                                                 type="number"
                                                 value={editValue}
                                                 onChange={(e) => setEditValue(e.target.value)}
-                                                className="w-20 px-1 py-0.5 text-sm text-white bg-transparent rounded border border-white/30 focus:border-white focus:outline-none"
+                                                className="w-20 px-1 py-0.5 text-sm text-white bg-transparent rounded border border-white/30 focus:border-sky-500 focus:outline-none"
                                             />
                                             <span className="text-xs text-gray-400">min</span>
                                         </div>
@@ -120,7 +123,11 @@ export default function HistoryList({
                                     )}
 
                                     {isEditing ? (
-                                        <div className="flex flex-col gap-1 mb-1 mt-2">
+                                        <div className="flex items-center gap-2 mb-1 mt-2">
+                                            <div
+                                                className="w-3 h-3 rounded-full flex-shrink-0"
+                                                style={{backgroundColor: currentEditLabelColor}}
+                                            />
                                             <select
                                                 value={editLabelId}
                                                 onChange={(e) => setEditLabelId(e.target.value)}
@@ -134,13 +141,19 @@ export default function HistoryList({
                                             </select>
                                         </div>
                                     ) : (
-                                        <span className="text-sm text-gray-300">
-                                            {data.label.name}
-                                        </span>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <div
+                                                className="w-3 h-3 rounded-full flex-shrink-0"
+                                                style={{backgroundColor: data.label.color || '#6b7280'}}
+                                            />
+                                            <span className="text-sm text-gray-300">
+                                                {data.label.name}
+                                            </span>
+                                        </div>
                                     )}
                                 </div>
 
-                                <div className="mr-2">
+                                <div>
                                     {isEditing ? (
                                         <input
                                             type="datetime-local"
@@ -149,7 +162,7 @@ export default function HistoryList({
                                             className="bg-neutral-700 text-white text-xs p-1 rounded border border-neutral-600"
                                         />
                                     ) : (
-                                        <span className="text-sm text-gray-400 text-right">
+                                        <span className="text-sm text-gray-400">
                                             {new Date(data.timestamp).toLocaleString()}
                                         </span>
                                     )}
