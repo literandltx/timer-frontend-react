@@ -4,7 +4,6 @@ import { LOCAL_STORAGE_KEY_LABEL_OPTIONS } from "../hooks/useLabels";
 import EditableListItem from "../components/common/EditableListItem";
 import type { Label } from "../types/labels";
 
-// 1. Define your 10 preset colors (Tailwind-friendly hex codes)
 const PREDEFINED_COLORS = [
     "#ef4444", // Red
     "#f97316", // Orange

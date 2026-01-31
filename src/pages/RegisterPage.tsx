@@ -99,114 +99,111 @@ function RegisterPage() {
 
     return (
         <div className="flex items-center justify-center h-screen">
-            {/*<div className="w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl p-8">*/}
-            <div>
-                <div className="mb-8 text-center">
-                    <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-100 to-cyan-300">
-                        Create Account
-                    </h2>
+            <div className="mb-8 text-center">
+                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-100 to-cyan-300">
+                    Create Account
+                </h2>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300 block ml-1">
+                        Email
+                    </label>
+                    <div className="relative group">
+                        <div
+                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <MailIcon
+                                className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors"/>
+                        </div>
+                        <input
+                            type="email"
+                            name="email"
+                            className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 p-3 placeholder-slate-500 transition-all outline-none"
+                            placeholder="name@example.com"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300 block ml-1">
-                            Email
-                        </label>
-                        <div className="relative group">
-                            <div
-                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <MailIcon
-                                    className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors"/>
-                            </div>
-                            <input
-                                type="email"
-                                name="email"
-                                className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 p-3 placeholder-slate-500 transition-all outline-none"
-                                placeholder="name@example.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                            />
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300 block ml-1">
+                        Password
+                    </label>
+                    <div className="relative group">
+                        <div
+                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <LockIcon
+                                className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors"/>
                         </div>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
+                            placeholder="••••••••"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
+                </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300 block ml-1">
-                            Password
-                        </label>
-                        <div className="relative group">
-                            <div
-                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <LockIcon
-                                    className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors"/>
-                            </div>
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                name="password"
-                                className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={handleChange}
-                                required
-                            />
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300 block ml-1">
+                        Confirm Password
+                    </label>
+                    <div className="relative group">
+                        <div
+                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <LockIcon
+                                className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors"/>
                         </div>
+                        <input
+                            type={showRepeatPassword ? "text" : "password"}
+                            name="repeatPassword"
+                            className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
+                            placeholder="••••••••"
+                            value={formData.repeatPassword}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
+                </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300 block ml-1">
-                            Confirm Password
-                        </label>
-                        <div className="relative group">
-                            <div
-                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <LockIcon
-                                    className="h-5 w-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors"/>
-                            </div>
-                            <input
-                                type={showRepeatPassword ? "text" : "password"}
-                                name="repeatPassword"
-                                className="w-full bg-slate-800/10 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 block pl-10 pr-10 p-3 placeholder-slate-500 transition-all outline-none"
-                                placeholder="••••••••"
-                                value={formData.repeatPassword}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full flex justify-center items-center bg-gradient-to-r from-[#242424]/70 to-[#242424]/70 font-semibold py-3 px-4 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                >
+                    {isLoading ? (
+                        <>
+                            <Spinner/>
+                            Registering...
+                        </>
+                    ) : (
+                        'Create Account'
+                    )}
+                </button>
+            </form>
 
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full flex justify-center items-center bg-gradient-to-r from-[#242424]/70 to-[#242424]/70 font-semibold py-3 px-4 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    >
-                        {isLoading ? (
-                            <>
-                                <Spinner/>
-                                Registering...
-                            </>
-                        ) : (
-                            'Create Account'
-                        )}
-                    </button>
-                </form>
+            {status && (
+                <div
+                    className={`mt-6 p-3 rounded-xl border text-sm text-center animate-pulse ${getStatusColor()}`}>
+                    {status}
+                </div>
+            )}
 
-                {status && (
-                    <div
-                        className={`mt-6 p-3 rounded-xl border text-sm text-center animate-pulse ${getStatusColor()}`}>
-                        {status}
-                    </div>
-                )}
-
-                <p className="mt-8 text-center text-sm text-slate-500">
-                    Already have an account?{' '}
-                    <NavLink
-                        to="/auth/login"
-                        className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
-                    >
-                        Log in
-                    </NavLink>
-                </p>
-            </div>
+            <p className="mt-8 text-center text-sm text-slate-500">
+                Already have an account?{' '}
+                <NavLink
+                    to="/auth/login"
+                    className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                    Log in
+                </NavLink>
+            </p>
         </div>
     );
 }
