@@ -7,15 +7,18 @@ export const exportHistoryToCSV = (history: TimerData[]): void => {
         return;
     }
 
-    const headers: string[] = ["Label", "Time Amount (s)", "Timestamp (Raw)", "Date Formatted"];
+    const headers: string[] = ["Label", "Color", "Time Amount (s)", "Timestamp (Raw)", "Date Formatted"];
 
     const rows: string[] = history.map(timer => {
-        const safeLabel = `"${timer.label.name.replace(/"/g, '""')}"`;
-        const dateStr = `"${new Date(timer.timestamp).toLocaleString()}"`;
-        return [safeLabel, timer.timeAmount, timer.timestamp, dateStr].join(",");
+        const safeLabel: string = `"${timer.label.name.replace(/"/g, '""')}"`;
+        const color: string = timer.label.color || "#6b7280";
+        const dateStr: string = `"${new Date(timer.timestamp).toLocaleString()}"`;
+        console.log(safeLabel, color, timer.timeAmount, timer.timestamp, dateStr)
+
+        return [safeLabel, color, timer.timeAmount, timer.timestamp, dateStr].join(",");
     });
 
-    const csvContent = [headers.join(","), ...rows].join("\n");
+    const csvContent: string = [headers.join(","), ...rows].join("\n");
     const blob: Blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
     const url: string = URL.createObjectURL(blob);
 
@@ -40,8 +43,10 @@ export const parseHistoryFromCSV = (file: File): Promise<TimerData[]> => {
                 return;
             }
 
-            const lines = text.split('\n');
+            const lines: string[] = text.split('\n');
             const newTimers: TimerData[] = [];
+
+            const DEFAULT_COLOR = "#555";
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -55,15 +60,29 @@ export const parseHistoryFromCSV = (file: File): Promise<TimerData[]> => {
                         labelName = labelName.slice(1, -1).replace(/""/g, '"');
                     }
 
-                    const timeAmount = parseInt(parts[1], 10);
-                    const timestamp = parseInt(parts[2], 10);
+                    let color: string = DEFAULT_COLOR;
+                    let timeAmount: number = 0;
+                    let timestamp: number = 0;
+
+                    const secondColAsNum: number = parseInt(parts[1], 10);
+
+                    if (!isNaN(secondColAsNum)) {
+                        timeAmount = secondColAsNum;
+                        timestamp = parseInt(parts[2], 10);
+                    } else {
+                        color = parts[1].trim();
+                        timeAmount = parseInt(parts[2], 10);
+                        timestamp = parseInt(parts[3], 10);
+                    }
 
                     if (!isNaN(timeAmount) && !isNaN(timestamp)) {
                         const newLabel: Label = {
                             id: `import-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-                            name: labelName
+                            name: labelName,
+                            color: color,
                         };
 
+                        console.log(labelName, color, timeAmount, timestamp, new Date(timestamp).toLocaleString())
                         newTimers.push({
                             label: newLabel,
                             timeAmount,
