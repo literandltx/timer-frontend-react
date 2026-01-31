@@ -10,8 +10,9 @@ export const exportHistoryToCSV = (history: TimerData[]): void => {
     const headers: string[] = ["Label", "Color", "Time Amount (s)", "Timestamp (Raw)", "Date Formatted"];
 
     const rows: string[] = history.map(timer => {
-        const safeLabel: string = `"${timer.label.name.replace(/"/g, '""')}"`;
-        const color: string = timer.label.color || "#6b7280";
+        const labelName: string = timer.label?.name || "Untitled";
+        const safeLabel: string = `"${labelName.replace(/"/g, '""')}"`;
+        const color: string = timer.label?.color || "#555";
         const dateStr: string = `"${new Date(timer.timestamp).toLocaleString()}"`;
 
         return [safeLabel, color, timer.timeAmount, timer.timestamp, dateStr].join(",");
