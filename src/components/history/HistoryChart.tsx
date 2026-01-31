@@ -21,33 +21,42 @@ export default function HistoryChart({data}: HistoryChartProps) {
     const [weekOffset, setWeekOffset] = useState(0);
 
     const chartData = useMemo<ChartDayData[]>(() => {
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() - (weekOffset * 7));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const dayOfWeek = today.getDay();
+        const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+        const currentMonday = new Date(today);
+        currentMonday.setDate(today.getDate() - daysSinceMonday);
+
+        const startOfWeek = new Date(currentMonday);
+        startOfWeek.setDate(startOfWeek.getDate() - (weekOffset * 7));
 
         const days = [];
-        for (let i = 6; i >= 0; i--) {
-            const d = new Date(endDate);
-            d.setDate(d.getDate() - i);
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(startOfWeek);
+            d.setDate(startOfWeek.getDate() + i);
             days.push(d);
         }
 
         return days.map(day => {
             const dayString = day.toDateString();
 
-            // 1. Filter timers for this specific day
             const daysTimers = data.filter(item =>
                 new Date(item.timestamp).toDateString() === dayString
             );
 
-            // 2. Group by Label
             const labelMap = new Map<string, { name: string, color: string, seconds: number }>();
 
             daysTimers.forEach(timer => {
+                if (!timer.label) return;
+
                 const labelId = timer.label.id;
                 if (!labelMap.has(labelId)) {
                     labelMap.set(labelId, {
-                        name: timer.label.name,
-                        color: timer.label.color || '#6b7280', // Fallback color
+                        name: timer.label.name || 'Untitled',
+                        color: timer.label.color || '#6b7280',
                         seconds: 0
                     });
                 }
@@ -55,15 +64,14 @@ export default function HistoryChart({data}: HistoryChartProps) {
                 entry.seconds += timer.timeAmount;
             });
 
-            // 3. Create Segments Array
             const segments = Array.from(labelMap.values())
                 .map(item => ({
                     labelName: item.name,
                     color: item.color,
                     minutes: Math.floor(item.seconds / 60)
                 }))
-                .filter(seg => seg.minutes > 0) // Only show segments with actual minutes
-                .sort((a, b) => b.minutes - a.minutes); // Sort largest to bottom/top
+                .filter(seg => seg.minutes > 0)
+                .sort((a, b) => b.minutes - a.minutes);
 
             const totalSeconds = daysTimers.reduce((acc, curr) => acc + curr.timeAmount, 0);
 
@@ -76,7 +84,6 @@ export default function HistoryChart({data}: HistoryChartProps) {
             };
         });
     }, [data, weekOffset]);
-
     const averageMinutes = useMemo(() => {
         const total = chartData.reduce((acc, curr) => acc + curr.totalMinutes, 0);
         return Math.round(total / 7);
@@ -86,7 +93,6 @@ export default function HistoryChart({data}: HistoryChartProps) {
 
     const maxMinutes: number = Math.max(...chartData.map(d => d.totalMinutes));
 
-    // Dynamic Step Size Calculation
     let stepSize: number = 60;
     if (maxMinutes <= 60) stepSize = 10;
     else if (maxMinutes <= 120) stepSize = 30;
@@ -104,7 +110,7 @@ export default function HistoryChart({data}: HistoryChartProps) {
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h2 className="text-lg font-semibold text-gray-200">
-                        {weekOffset === 0 ? "Last 7 Days" : `${weekOffset} Week${weekOffset > 1 ? 's' : ''} Ago`}
+                        {weekOffset === 0 ? "This Week" : weekOffset === 1 ? "Last Week" : `${weekOffset} Weeks Ago`}
                     </h2>
                     <p className="text-sm text-gray-400 mt-1 flex items-center gap-2">
                         <span>{dateRangeLabel}</span>
