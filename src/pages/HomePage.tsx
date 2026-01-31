@@ -24,7 +24,7 @@ function HomePage() {
     const {
         labels,
         activeLabel,
-        handleLabelChange
+        setActiveLabel
     } = useLabels();
     const {addTimer} = useTimerHistory();
     const timeAmount: number = selectedOption.value * SECONDS_PER_MINUTE;
@@ -90,7 +90,7 @@ function HomePage() {
             <div className="absolute bottom-[2%] right-[2%] flex items-center gap-2">
                 <LabelConfigModal
                     selectedLabel={activeLabel}
-                    onSelect={handleLabelChange}
+                    onSelect={setActiveLabel}
                     labels={labels}
                 />
             </div>
