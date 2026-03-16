@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import styles from './Timer.module.css';
 
 import {formatTime} from '../../utils/timeUtils';
@@ -17,30 +17,44 @@ type CountdownTimerProps = {
 function Timer({timeAmount, label, timestamp, onFinish, onReset}: CountdownTimerProps) {
     const [timeLeft, setTimeLeft] = useState<number>(timeAmount);
     const [isRunning, setIsRunning] = useState<boolean>(false);
+    const [endTime, setEndTime] = useState<number | null>(null);
+    const timerPropsRef = useRef({label, timeAmount, timestamp, onFinish});
 
     useEffect(() => {
-        if (!isRunning) {
+        timerPropsRef.current = {label, timeAmount, timestamp, onFinish};
+    }, [label, timeAmount, timestamp, onFinish]);
+
+    useEffect(() => {
+        if (!isRunning || !endTime) {
             return;
         }
 
-        const intervalId: number = setInterval((): void => {
-            if (timeLeft > 1) {
-                setTimeLeft((prev): number => prev - 1);
-            } else {
+        const intervalId: number = window.setInterval((): void => {
+            const remaining = Math.round((endTime - Date.now()) / 1000);
+
+            if (remaining <= 0) {
+                const {label, timeAmount, timestamp, onFinish} = timerPropsRef.current;
                 onFinish({label, timeAmount, timestamp});
 
                 clearInterval(intervalId);
                 setIsRunning(false);
                 setTimeLeft(timeAmount);
+            } else {
+                setTimeLeft(remaining);
             }
-        }, 1000);
+        }, 500);
 
         return () => clearInterval(intervalId);
-    }, [isRunning, timeLeft, label, timeAmount, timestamp, onFinish]);
+    }, [isRunning, endTime]);
 
     const handleClick = () => {
         if (timeLeft > 0) {
-            setIsRunning((prev) => !prev);
+            if (!isRunning) {
+                setEndTime(Date.now() + timeLeft * 1000);
+                setIsRunning(true);
+            } else {
+                setIsRunning(false);
+            }
         }
     };
 
@@ -48,6 +62,7 @@ function Timer({timeAmount, label, timestamp, onFinish, onReset}: CountdownTimer
         onReset({label, timeAmount: timeAmount - timeLeft, timestamp});
 
         setIsRunning(false);
+        setEndTime(null);
         setTimeLeft(timeAmount);
     };
 
