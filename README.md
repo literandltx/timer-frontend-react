@@ -1,73 +1,70 @@
-# React + TypeScript + Vite
+# Timer App - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek and efficient timer application built with React, TypeScript, and Vite. Track your tasks, manage labels, and visualize your productivity history.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Customizable Timers**: Create and manage different timer durations.
+- **Label Management**: Categorize your sessions with custom labels.
+- **Productivity History**: View detailed history of your timed sessions with charts and lists.
+- **Tab Notifications**: Get notified when a timer finishes, even if you're on another tab.
+- **Import/Export**: Easily backup or migrate your data via CSV.
+- **User Authentication**: Secure your data with registration and login.
+- **Responsive Design**: Modern UI built with Tailwind CSS.
 
-## React Compiler
+## 🛠️ Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend Framework**: [React 19](https://react.dev/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Routing**: [React Router 7](https://reactrouter.com/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Components**: [Headless UI](https://headlessui.com/), [Heroicons](https://heroicons.com/), [HeroUI](https://heroui.com/)
+- **Data Fetching**: [Axios](https://axios-http.com/)
+- **State Management**: React Hooks (Custom hooks for settings, labels, history, etc.)
 
-## Expanding the ESLint configuration
+## 🏁 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- `npm` or `yarn`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Navigate to the `timer_frontend` directory:
+   ```bash
+   cd timer_frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running the Application
+
+To start the development server:
+```bash
+npm run dev
 ```
+The application will be available at `http://localhost:5173`.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📜 Available Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `npm run dev`: Starts the Vite development server.
+- `npm run build`: Compiles the TypeScript code and builds the production-ready assets.
+- `npm run lint`: Runs ESLint to check for code quality issues.
+- `npm run preview`: Locally previews the production build.
+- `npm run deploy`: Deploys the application to GitHub Pages.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📂 Project Structure
+
+- `src/components`: Reusable UI components organized by feature.
+- `src/hooks`: Custom React hooks for business logic and state management.
+- `src/pages`: Main application views/routes.
+- `src/types`: TypeScript interfaces and types.
+- `src/utils`: Helper functions for time formatting, CSV handling, etc.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
