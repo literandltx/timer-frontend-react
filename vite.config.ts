@@ -8,5 +8,5 @@ export default defineConfig({
     resolve: {
         dedupe: ['react', 'react-dom', 'react-router-dom', 'react-router'],
     },
-    base: "/timer/"
+    base: "/timer-frontend-react/"
 })
